@@ -1,0 +1,74 @@
+---
+- name: Install build dependencies for Linuxbrew
+  package:
+    name:
+      - build-essential
+      - procps
+      - file
+      - curl
+      - git
+      - ca-certificates
+      - xz-utils
+      - gcc
+      - make
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure linuxbrew base directory exists
+  file:
+    path: "/home/linuxbrew"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure Homebrew prefix directory exists with dev ownership
+  file:
+    path: "{{ brew_prefix }}"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+    recurse: yes
+
+- name: Install Linuxbrew (Homebrew) if missing
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    if [ ! -x "{{ brew_prefix }}/bin/brew" ]; then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Add brew shellenv to profile
+  lineinfile:
+    path: "/home/{{ dev_username }}/.bashrc"
+    line: 'eval "$({{ brew_prefix }}/bin/brew shellenv)"'
+    create: yes
+  become_user: "{{ dev_username }}"
+
+- name: Add brew shellenv to zprofile
+  lineinfile:
+    path: "/home/{{ dev_username }}/.zprofile"
+    line: 'eval "$({{ brew_prefix }}/bin/brew shellenv)"'
+    create: yes
+  become_user: "{{ dev_username }}"
+
+- name: Install packages via brew (git, git-delta, zsh, starship)
+  become_user: "{{ dev_username }}"
+  shell: "{{ brew_prefix }}/bin/brew install git git-delta zsh starship | cat"
+  args:
+    executable: /bin/bash
+
+- name: Ensure brew is in PATH for subsequent tasks
+  set_fact:
+    brew_bin: "{{ brew_prefix }}/bin/brew"
+
+- name: Disable brew analytics
+  become_user: "{{ dev_username }}"
+  shell: "{{ brew_prefix }}/bin/brew analytics off"
+  args:
+    executable: /bin/bash
+
+

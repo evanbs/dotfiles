@@ -1,0 +1,44 @@
+---
+- name: Ensure group exists for dev user
+  group:
+    name: "{{ dev_username }}"
+    state: present
+
+- name: Create dev user without sudo
+  user:
+    name: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    shell: /bin/bash
+    create_home: yes
+    state: present
+
+- name: Ensure dev user has no sudo privileges
+  file:
+    path: "/etc/sudoers.d/{{ dev_username }}"
+    state: absent
+
+- name: Ensure dev user is not member of sudo group
+  command: "gpasswd -d {{ dev_username }} sudo"
+  register: remove_sudo
+  changed_when: remove_sudo.rc == 0
+  failed_when: false
+
+- name: Create .ssh directory for dev user
+  file:
+    path: "/home/{{ dev_username }}/.ssh"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0700'
+
+- name: Set default bashrc skeleton for dev user if missing
+  copy:
+    dest: "/home/{{ dev_username }}/.bashrc"
+    content: |
+      # Managed by Ansible
+      export PATH="$PATH:{{ brew_prefix }}/bin"
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0644'
+    force: no
+

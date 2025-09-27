@@ -1,0 +1,31 @@
+---
+- name: Deploy .aliases
+  become_user: "{{ dev_username }}"
+  copy:
+    src: "{{ role_path }}/files/aliases"
+    dest: "/home/{{ dev_username }}/.aliases"
+    mode: '0644'
+
+- name: Deploy .gitconfig
+  become_user: "{{ dev_username }}"
+  copy:
+    src: "{{ role_path }}/files/gitconfig"
+    dest: "/home/{{ dev_username }}/.gitconfig"
+    mode: '0644'
+
+- name: Ensure .zshrc contains aliases and starship
+  become_user: "{{ dev_username }}"
+  lineinfile:
+    path: "/home/{{ dev_username }}/.zshrc"
+    line: '[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"'
+    create: yes
+
+- name: Ensure starship init present
+  become_user: "{{ dev_username }}"
+  lineinfile:
+    path: "/home/{{ dev_username }}/.zshrc"
+    regexp: 'starship init zsh'
+    line: 'eval "$(starship init zsh)"'
+
+
+

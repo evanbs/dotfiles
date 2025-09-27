@@ -1,0 +1,14 @@
+- hosts: localhost
+  become: true
+  vars:
+    dev_username: dev
+    brew_prefix: "/home/linuxbrew/.linuxbrew"
+  roles:
+    - role: user
+    - role: homebrew
+    - role: zsh
+    - role: ohmyzsh
+    - role: starship
+    - role: dotfiles
+
+

@@ -1,0 +1,17 @@
+---
+- name: Create config directory for starship
+  file:
+    path: "/home/{{ dev_username }}/.config"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+- name: Install Catppuccin Frappe preset for starship
+  become_user: "{{ dev_username }}"
+  copy:
+    src: "{{ role_path }}/files/starship.toml"
+    dest: "/home/{{ dev_username }}/.config/starship.toml"
+    mode: '0644'
+
+

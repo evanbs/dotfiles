@@ -1,0 +1,30 @@
+---
+- name: Install oh-my-zsh for dev user if missing
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    export RUNZSH=no
+    export CHSH=no
+    if [ ! -d "/home/{{ dev_username }}/.oh-my-zsh" ]; then
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Ensure .zshrc exists and sets ZSH and plugins
+  become_user: "{{ dev_username }}"
+  template:
+    src: "{{ role_path }}/templates/zshrc.j2"
+    dest: "/home/{{ dev_username }}/.zshrc"
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0644'
+
+- name: Ensure git plugin is present in .zshrc
+  lineinfile:
+    path: "/home/{{ dev_username }}/.zshrc"
+    regexp: '^plugins=' 
+    line: 'plugins=(git)'
+  become_user: "{{ dev_username }}"
+
+

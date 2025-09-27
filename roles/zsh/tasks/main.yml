@@ -1,0 +1,24 @@
+---
+- name: Ensure brew zsh path exists
+  stat:
+    path: "{{ brew_prefix }}/bin/zsh"
+  register: zsh_brew
+
+- name: Install zsh via apt as fallback
+  package:
+    name: zsh
+    state: present
+  when: not zsh_brew.stat.exists and ansible_os_family == 'Debian'
+
+- name: Ensure zsh path is in /etc/shells
+  lineinfile:
+    path: /etc/shells
+    line: "{{ (zsh_brew.stat.exists | ternary(brew_prefix + '/bin/zsh', '/usr/bin/zsh')) }}"
+    create: no
+
+- name: Set default shell to brew zsh for dev user
+  user:
+    name: "{{ dev_username }}"
+    shell: "{{ (zsh_brew.stat.exists | ternary(brew_prefix + '/bin/zsh', '/usr/bin/zsh')) }}"
+
+
