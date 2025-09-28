@@ -13,6 +13,13 @@
     dest: "/home/{{ dev_username }}/.gitconfig"
     mode: '0644'
 
+- name: Deploy .functions
+  become_user: "{{ dev_username }}"
+  copy:
+    src: "{{ role_path }}/files/functions"
+    dest: "/home/{{ dev_username }}/.functions"
+    mode: '0644'
+
 - name: Ensure .zshrc contains aliases and starship
   become_user: "{{ dev_username }}"
   lineinfile:

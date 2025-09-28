@@ -1,0 +1,4 @@
+# Managed by Ansible
+ccat() {
+  cat "$1" | xsel --clipboard --input
+}

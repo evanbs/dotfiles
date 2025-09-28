@@ -10,6 +10,9 @@ eval "$({{ brew_prefix }}/bin/brew shellenv)"
 # Aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
+# Functions
+[[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
+
 # Starship prompt
 eval "$(starship init zsh)"
 
