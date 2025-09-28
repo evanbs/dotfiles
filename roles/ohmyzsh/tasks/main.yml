@@ -20,11 +20,44 @@
     group: "{{ dev_username }}"
     mode: '0644'
 
-- name: Ensure git plugin is present in .zshrc
+- name: Ensure oh-my-zsh custom plugins directory exists
+  become_user: "{{ dev_username }}"
+  file:
+    path: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+- name: Clone zsh-autosuggestions plugin
+  become_user: "{{ dev_username }}"
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    version: master
+    update: yes
+
+- name: Clone zsh-syntax-highlighting plugin
+  become_user: "{{ dev_username }}"
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    version: master
+    update: yes
+
+- name: Clone you-should-use plugin
+  become_user: "{{ dev_username }}"
+  git:
+    repo: https://github.com/MichaelAquilina/zsh-you-should-use.git
+    dest: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/you-should-use"
+    version: master
+    update: yes
+
+- name: Ensure plugins list is present in .zshrc
+  become_user: "{{ dev_username }}"
   lineinfile:
     path: "/home/{{ dev_username }}/.zshrc"
-    regexp: '^plugins=' 
-    line: 'plugins=(git)'
-  become_user: "{{ dev_username }}"
+    regexp: '^plugins='
+    line: 'plugins=(git you-should-use zsh-autosuggestions history-substring-search zsh-syntax-highlighting)'
 
 
