@@ -7,11 +7,25 @@
     group: "{{ dev_username }}"
     mode: '0755'
 
-- name: Install Catppuccin Frappe preset for starship
+- name: Generate Catppuccin Powerline preset for starship
   become_user: "{{ dev_username }}"
-  copy:
-    src: "{{ role_path }}/files/starship.toml"
-    dest: "/home/{{ dev_username }}/.config/starship.toml"
-    mode: '0644'
+  shell: "{{ brew_prefix }}/bin/starship preset catppuccin-powerline -o /home/{{ dev_username }}/.config/starship.toml | cat"
+  args:
+    executable: /bin/bash
+
+- name: Force Catppuccin Frappe palette in starship config (replace if exists)
+  become_user: "{{ dev_username }}"
+  replace:
+    path: "/home/{{ dev_username }}/.config/starship.toml"
+    regexp: "^palette\\s*=\\s*'.*'$"
+    replace: "palette = 'catppuccin_frappe'"
+
+- name: Ensure Catppuccin Frappe palette line is present in starship config
+  become_user: "{{ dev_username }}"
+  lineinfile:
+    path: "/home/{{ dev_username }}/.config/starship.toml"
+    regexp: "^palette\\s*=\\s*'catppuccin_frappe'$"
+    line: "palette = 'catppuccin_frappe'"
+    insertafter: EOF
 
 
