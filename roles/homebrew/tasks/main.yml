@@ -77,9 +77,9 @@
   args:
     executable: /bin/bash
 
-- name: Install developer CLI tools via brew (bat, vim, eza, httpyac, yq, ripgrep, tldr, jq)
+- name: Install developer CLI tools via brew (bat, vim, eza, httpyac, yq, ripgrep, tldr, jq, wl-clipboard, xclip)
   become_user: "{{ dev_username }}"
-  shell: "{{ brew_prefix }}/bin/brew install bat vim eza httpyac yq ripgrep tldr jq | cat"
+  shell: "{{ brew_prefix }}/bin/brew install bat vim eza httpyac yq ripgrep tldr jq wl-clipboard xclip | cat"
   args:
     executable: /bin/bash
 

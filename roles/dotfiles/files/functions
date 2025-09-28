@@ -1,4 +1,42 @@
 # Managed by Ansible
-ccat() {
-  cat "$1" | xsel --clipboard --input
+cat() {
+  # Uso: cat <arquivo> | ou: algum_comando | cat
+  local data
+  if [ -n "${1-}" ]; then
+    data="$(command cat -- "$1")"
+  else
+    data="$(command cat)"
+  fi
+
+  if command -v wl-copy >/dev/null 2>&1; then
+    printf "%s" "$data" | wl-copy
+    return $?
+  fi
+
+  if command -v xclip >/dev/null 2>&1; then
+    printf "%s" "$data" | xclip -selection clipboard
+    return $?
+  fi
+
+  if command -v pbcopy >/dev/null 2>&1; then
+    printf "%s" "$data" | pbcopy
+    return $?
+  fi
+
+  if [ -n "${TMUX-}" ] && command -v tmux >/dev/null 2>&1; then
+    printf "%s" "$data" | tmux load-buffer - >/dev/null 2>&1 && tmux display-message "Conteúdo carregado no tmux buffer"
+    return $?
+  fi
+
+  # Fallback via OSC52 (terminais compatíveis)
+  if command -v base64 >/dev/null 2>&1; then
+    local b64
+    b64="$(printf "%s" "$data" | base64 | tr -d '\r\n')"
+    printf "\033]52;c;%s\a" "$b64"
+    return 0
+  fi
+
+  # Último recurso: imprime no stdout
+  printf "%s\n" "$data"
+  return 0
 }
