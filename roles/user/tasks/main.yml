@@ -42,3 +42,11 @@
     mode: '0644'
     force: no
 
+- name: Ensure workspace directory exists for dev user
+  file:
+    path: "/home/{{ dev_username }}/workspace"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
