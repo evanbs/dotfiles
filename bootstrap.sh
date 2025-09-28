@@ -20,20 +20,21 @@ install_ansible() {
   if need_cmd apt-get; then
     apt-get update -y
     DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-venv python3-pip sshpass ca-certificates curl git
-    python3 -m pip install --upgrade pip
-    python3 -m pip install ansible
+    # Preferir pacote do sistema para evitar PEP 668 (externally-managed-environment)
+    if ! apt-get install -y ansible-core; then
+      apt-get install -y ansible || true
+    fi
   elif need_cmd dnf; then
     dnf -y install python3 python3-pip sshpass ca-certificates curl git
-    python3 -m pip install --upgrade pip
-    python3 -m pip install ansible
+    dnf -y install ansible-core || dnf -y install ansible || true
   elif need_cmd pacman; then
     pacman -Sy --noconfirm python python-pip openssh ca-certificates curl git
-    python3 -m pip install --upgrade pip
-    python3 -m pip install ansible
+    pacman -Sy --noconfirm ansible || true
   else
-    log "Gerenciador de pacotes não detectado; instalando Ansible via pip."
-    python3 -m pip install --upgrade pip
-    python3 -m pip install ansible
+    log "Gerenciador de pacotes não detectado; instalando Ansible em venv local."
+    python3 -m venv "$PROJECT_DIR/.venv"
+    "$PROJECT_DIR/.venv/bin/pip" install --upgrade pip
+    "$PROJECT_DIR/.venv/bin/pip" install ansible
   fi
 }
 
@@ -41,8 +42,14 @@ install_ansible
 
 cd "$PROJECT_DIR"
 
+# Determina binário do ansible-playbook (sistema ou venv local)
+ANSIBLE_BIN="$(command -v ansible-playbook || true)"
+if [ -z "$ANSIBLE_BIN" ] && [ -x "$PROJECT_DIR/.venv/bin/ansible-playbook" ]; then
+  ANSIBLE_BIN="$PROJECT_DIR/.venv/bin/ansible-playbook"
+fi
+
 log "Executando playbook..."
-ANSIBLE_CONFIG="$PROJECT_DIR/ansible.cfg" ansible-playbook site.yml -i inventory/hosts.ini "$@"
+ANSIBLE_CONFIG="$PROJECT_DIR/ansible.cfg" "$ANSIBLE_BIN" site.yml -i inventory/hosts.ini "$@"
 log "Concluído. Abrindo uma sessão zsh de login como o usuário dev..."
 
 # Abre uma sessão zsh de login para aplicar as configurações no ambiente do usuário dev
