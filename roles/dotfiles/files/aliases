@@ -1,8 +1,13 @@
 # Managed by Ansible
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias gs='git status'
-alias gd='git diff'
-alias gl='git log --oneline --graph --decorate'
-
+alias aliases="cursor ~/.aliases"
+alias cl="clear"
+alias update="source ~/.zshrc"
+alias edit="cursor ~/.zshrc"
+alias ws="cd ~/workspace"
+alias files="explorer.exe"
+alias l="eza --icons=always --color=always --group-directories-first --git --git-repos --long --no-permissions
+--no-user --no-time --no-filesize"
+alias ll="eza --icons=always --color=always --group-directories-first --git --git-repos --long --octal-permissi
+ons --header"
+alias tree="eza --icons=always --color=always --group-directories-first --tree"
+alias http="httpyac"
