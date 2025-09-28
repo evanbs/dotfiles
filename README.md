@@ -8,12 +8,6 @@ Provisiona um usuário de desenvolvimento sem sudo, Homebrew no Linux, zsh + oh-
 
 ### Execução (um comando)
 
-Se você já tem este diretório local em `/home/evandro/dotfiles`:
-
-```bash
-sudo /home/evandro/dotfiles/bootstrap.sh
-```
-
 Caso esteja clonando via Git (substitua a URL pelo seu repositório):
 
 ```bash
