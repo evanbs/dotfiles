@@ -5,6 +5,7 @@
     set -euo pipefail
     export RUNZSH=no
     export CHSH=no
+    export PATH="{{ brew_prefix }}/bin:$PATH"
     if [ ! -d "/home/{{ dev_username }}/.oh-my-zsh" ]; then
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
