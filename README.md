@@ -23,9 +23,17 @@ id dev
 sudo su - dev
 echo $SHELL
 brew --version && git --version && delta --version && starship --version
+# Clipboard (cat copia para a área de transferência)
+echo "hello" | cat
 ```
 
-Em seguida, abra um novo terminal para carregar o zsh e o starship.
+Em seguida, um `zsh` de login é aberto automaticamente pelo `bootstrap.sh`.
+
+### Clipboard
+
+- Visualização de arquivos: use `bat arquivo.txt`.
+- Copiar conteúdo para clipboard: `cat arquivo.txt` ou `echo "texto" | cat`.
+- Ordem de preferências: `wl-copy` (Wayland) → `xclip` (X11) → `pbcopy` (macOS) → `tmux buffer` → `OSC52`.
 
 ### Referências
 - `scruffaluff/bootware` em Ansible Galaxy
