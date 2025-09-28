@@ -43,6 +43,9 @@ cd "$PROJECT_DIR"
 
 log "Executando playbook..."
 ANSIBLE_CONFIG="$PROJECT_DIR/ansible.cfg" ansible-playbook site.yml -i inventory/hosts.ini "$@"
-log "Concluído. Abra uma nova sessão para carregar zsh/starship."
+log "Concluído. Abrindo uma sessão zsh de login como o usuário dev..."
+
+# Abre uma sessão zsh de login para aplicar as configurações no ambiente do usuário dev
+exec sudo -iu dev zsh -l
 
 
