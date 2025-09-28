@@ -55,7 +55,7 @@
     create: yes
   become_user: "{{ dev_username }}"
 
-- name: Install packages via brew (git, git-delta, zsh, starship)
+- name: Install base packages via brew (git, git-delta, zsh, starship)
   become_user: "{{ dev_username }}"
   shell: "{{ brew_prefix }}/bin/brew install git git-delta zsh starship | cat"
   args:
@@ -68,6 +68,12 @@
 - name: Disable brew analytics
   become_user: "{{ dev_username }}"
   shell: "{{ brew_prefix }}/bin/brew analytics off"
+  args:
+    executable: /bin/bash
+
+- name: Update Homebrew formulas
+  become_user: "{{ dev_username }}"
+  shell: "{{ brew_prefix }}/bin/brew update | cat"
   args:
     executable: /bin/bash
 
