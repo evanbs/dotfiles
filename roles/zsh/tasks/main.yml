@@ -16,7 +16,7 @@
     line: "{{ (zsh_brew.stat.exists | ternary(brew_prefix + '/bin/zsh', '/usr/bin/zsh')) }}"
     create: no
 
-- name: Set default shell to brew zsh for dev user
+- name: Set default shell to zsh for current user
   user:
     name: "{{ dev_username }}"
     shell: "{{ (zsh_brew.stat.exists | ternary(brew_prefix + '/bin/zsh', '/usr/bin/zsh')) }}"

@@ -1,0 +1,31 @@
+---
+- name: Ensure sudo package is present
+  package:
+    name: sudo
+    state: present
+
+- name: Configure passwordless sudo for current user
+  when: sudo_nopasswd | default(false) | bool
+  copy:
+    dest: "/etc/sudoers.d/{{ dev_username }}"
+    content: "{{ dev_username }} ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: '0440'
+    validate: 'visudo -cf %s'
+
+- name: Remove passwordless sudo configuration when disabled
+  when: not (sudo_nopasswd | default(false) | bool)
+  file:
+    path: "/etc/sudoers.d/{{ dev_username }}"
+    state: absent
+
+- name: Optionally set sudo timestamp_timeout (minutes)
+  when: sudo_timestamp_timeout is defined
+  lineinfile:
+    path: /etc/sudoers
+    create: no
+    regexp: '^Defaults\s+timestamp_timeout='
+    line: "Defaults timestamp_timeout={{ sudo_timestamp_timeout }}"
+    validate: 'visudo -cf %s'
+

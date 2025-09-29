@@ -14,13 +14,12 @@ Caso esteja clonando via Git (substitua a URL pelo seu repositório):
 git clone <URL_DO_SEU_REPO> ~/dotfiles && sudo ~/dotfiles/bootstrap.sh
 ```
 
-Por padrão cria o usuário `dev`. Altere variáveis em `group_vars/all.yml` se desejar.
+Por padrão usa o usuário atual do sistema. Você pode ajustar em `group_vars/all.yml`.
 
 ### Verificações pós-provisionamento
 
 ```bash
-id dev
-sudo su - dev
+id "$USER"
 echo $SHELL
 brew --version && git --version && delta --version && starship --version
 # Clipboard (cat copia para a área de transferência)
@@ -28,6 +27,12 @@ echo "hello" | cat
 ```
 
 Em seguida, um `zsh` de login é aberto automaticamente pelo `bootstrap.sh`.
+
+#### Sudo
+
+Por padrão, o provisionamento concede sudo sem senha (NOPASSWD) ao usuário atual usando `/etc/sudoers.d/<user>`.
+Você pode desativar isso ajustando `sudo_nopasswd: false` em `group_vars/all.yml`.
+Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para reduzir prompts de senha.
 
 ### Clipboard
 

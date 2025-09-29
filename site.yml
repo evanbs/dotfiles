@@ -1,10 +1,11 @@
 - hosts: localhost
   become: true
   vars:
-    dev_username: dev
+    dev_username: "{{ dev_username | default(lookup('env','SUDO_USER') or lookup('env','USER')) }}"
     brew_prefix: "/home/linuxbrew/.linuxbrew"
   roles:
     - role: user
+    - role: sudo
     - role: homebrew
     - role: zsh
     - role: ohmyzsh

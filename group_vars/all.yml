@@ -1,4 +1,10 @@
-dev_username: dev
+dev_username: "{{ lookup('env','SUDO_USER') or lookup('env','USER') }}"
 brew_prefix: "/home/linuxbrew/.linuxbrew"
+
+# Sudo configuration
+# When true, grants passwordless sudo (NOPASSWD) to current user
+sudo_nopasswd: true
+# Optionally, set sudo timestamp timeout (minutes). Omit to keep system default
+# sudo_timestamp_timeout: 30
 
 

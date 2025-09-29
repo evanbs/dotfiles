@@ -49,10 +49,11 @@ if [ -z "$ANSIBLE_BIN" ] && [ -x "$PROJECT_DIR/.venv/bin/ansible-playbook" ]; th
 fi
 
 log "Executando playbook..."
-ANSIBLE_CONFIG="$PROJECT_DIR/ansible.cfg" "$ANSIBLE_BIN" site.yml -i inventory/hosts.ini "$@"
-log "Concluído. Abrindo uma sessão zsh de login como o usuário dev..."
+CURRENT_USER="${SUDO_USER:-$USER}"
+ANSIBLE_CONFIG="$PROJECT_DIR/ansible.cfg" "$ANSIBLE_BIN" site.yml -i inventory/hosts.ini --extra-vars "dev_username=$CURRENT_USER" "$@"
+log "Concluído. Abrindo uma sessão zsh de login como o usuário $CURRENT_USER..."
 
-# Abre uma sessão zsh de login para aplicar as configurações no ambiente do usuário dev
-exec sudo -iu dev zsh -l
+# Abre uma sessão zsh de login para aplicar as configurações no ambiente do usuário atual
+exec sudo -iu "$CURRENT_USER" zsh -l
 
 

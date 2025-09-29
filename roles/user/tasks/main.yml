@@ -1,29 +1,5 @@
 ---
-- name: Ensure group exists for dev user
-  group:
-    name: "{{ dev_username }}"
-    state: present
-
-- name: Create dev user without sudo
-  user:
-    name: "{{ dev_username }}"
-    group: "{{ dev_username }}"
-    shell: /bin/bash
-    create_home: yes
-    state: present
-
-- name: Ensure dev user has no sudo privileges
-  file:
-    path: "/etc/sudoers.d/{{ dev_username }}"
-    state: absent
-
-- name: Ensure dev user is not member of sudo group
-  command: "gpasswd -d {{ dev_username }} sudo"
-  register: remove_sudo
-  changed_when: remove_sudo.rc == 0
-  failed_when: false
-
-- name: Create .ssh directory for dev user
+- name: Ensure .ssh directory exists for current user
   file:
     path: "/home/{{ dev_username }}/.ssh"
     state: directory
@@ -31,7 +7,7 @@
     group: "{{ dev_username }}"
     mode: '0700'
 
-- name: Set default bashrc skeleton for dev user if missing
+- name: Ensure default bashrc adds brew to PATH if missing
   copy:
     dest: "/home/{{ dev_username }}/.bashrc"
     content: |
@@ -42,7 +18,7 @@
     mode: '0644'
     force: no
 
-- name: Ensure workspace directory exists for dev user
+- name: Ensure workspace directory exists
   file:
     path: "/home/{{ dev_username }}/workspace"
     state: directory

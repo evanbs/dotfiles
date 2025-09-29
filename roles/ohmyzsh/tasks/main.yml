@@ -1,5 +1,5 @@
 ---
-- name: Install oh-my-zsh for dev user if missing
+- name: Install oh-my-zsh for current user if missing
   become_user: "{{ dev_username }}"
   shell: |
     set -euo pipefail
