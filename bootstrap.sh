@@ -12,6 +12,14 @@ log() { echo -e "[bootstrap] $*"; }
 
 need_cmd() { command -v "$1" >/dev/null 2>&1; }
 
+# Atualização base antes do Ansible (em sistemas Debian/Ubuntu)
+if need_cmd apt-get; then
+  log "Atualizando pacotes base (apt)..."
+  apt-get update -y
+  DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+  DEBIAN_FRONTEND=noninteractive apt-get install -y git
+fi
+
 install_ansible() {
   if need_cmd ansible; then
     return
