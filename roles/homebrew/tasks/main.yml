@@ -97,6 +97,7 @@
     - ripgrep
     - tldr
     - jq
+    - wget
     - wl-clipboard
     - xclip
 
