@@ -28,18 +28,28 @@
     line: "palette = 'catppuccin_frappe'"
     insertafter: EOF
 
-- name: Ensure add_newline is true in starship config (replace if exists)
+- name: Ensure [line_break] has disabled = false when section exists
   become_user: "{{ dev_username }}"
   replace:
     path: "/home/{{ dev_username }}/.config/starship.toml"
-    regexp: "^add_newline\\s*=\\s*.*$"
-    replace: "add_newline = true"
+    regexp: "(?ms)(\\[line_break\\][^\\[]*?)^disabled\\s*=\\s*true\\s*$"
+    replace: "\\1disabled = false"
 
-- name: Ensure add_newline line is present in starship config
+- name: Check if [line_break] section exists in starship config
   become_user: "{{ dev_username }}"
-  lineinfile:
+  shell: "grep -qxF '[line_break]' /home/{{ dev_username }}/.config/starship.toml"
+  register: line_break_section
+  changed_when: false
+  failed_when: false
+
+- name: Add [line_break] disabled=false section if missing
+  become_user: "{{ dev_username }}"
+  blockinfile:
     path: "/home/{{ dev_username }}/.config/starship.toml"
-    regexp: "^add_newline\\s*=\\s*true$"
-    line: "add_newline = true"
-    insertafter: BOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK line_break"
+    block: |
+      [line_break]
+      disabled = false
+    insertafter: EOF
+  when: line_break_section.rc != 0
 
