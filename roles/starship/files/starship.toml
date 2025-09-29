@@ -2,6 +2,9 @@
 # Catppuccin Frappe palette
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Disable the blank line at the start of the prompt
+add_newline = true
+
 format = """
 [](red)\
 $os\
