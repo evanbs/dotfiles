@@ -26,3 +26,10 @@
     group: "{{ dev_username }}"
     mode: '0755'
 
+- name: Ensure downloads directory exists
+  file:
+    path: "/home/{{ dev_username }}/downloads"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
