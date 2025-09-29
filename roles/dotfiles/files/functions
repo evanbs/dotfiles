@@ -1,28 +1,39 @@
 # Managed by Ansible
-cat() {
-  # Uso: cat <arquivo> | ou: algum_comando | cat
+clip() {
+  # Uso: clip <arquivo...> | ou: algum_comando | clip
+  # Lê de argumentos (um ou mais arquivos) ou stdin, e copia para clipboard
   local data
-  if [ -n "${1-}" ]; then
-    data="$(command cat -- "$1")"
+  if [ "$#" -gt 0 ]; then
+    data="$(command cat -- "$@")"
   else
     data="$(command cat)"
   fi
 
+  # WSL/Windows clipboard
+  if command -v clip.exe >/dev/null 2>&1; then
+    printf "%s" "$data" | clip.exe
+    return $?
+  fi
+
+  # Wayland
   if command -v wl-copy >/dev/null 2>&1; then
     printf "%s" "$data" | wl-copy
     return $?
   fi
 
+  # X11
   if command -v xclip >/dev/null 2>&1; then
     printf "%s" "$data" | xclip -selection clipboard
     return $?
   fi
 
+  # macOS
   if command -v pbcopy >/dev/null 2>&1; then
     printf "%s" "$data" | pbcopy
     return $?
   fi
 
+  # tmux buffer
   if [ -n "${TMUX-}" ] && command -v tmux >/dev/null 2>&1; then
     printf "%s" "$data" | tmux load-buffer - >/dev/null 2>&1 && tmux display-message "Conteúdo carregado no tmux buffer"
     return $?

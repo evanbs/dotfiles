@@ -37,7 +37,7 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
 ### Clipboard
 
 - Visualização de arquivos: use `bat arquivo.txt`.
-- Copiar conteúdo para clipboard: `cat arquivo.txt` ou `echo "texto" | cat`.
+- Copiar conteúdo para clipboard: `clip arquivo.txt` ou `echo "texto" | clip`.
 - Ordem de preferências: `wl-copy` (Wayland) → `xclip` (X11) → `pbcopy` (macOS) → `tmux buffer` → `OSC52`.
 
 ### Referências
