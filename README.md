@@ -11,7 +11,7 @@ Provisiona um usuário de desenvolvimento sem sudo, Homebrew no Linux, zsh + oh-
 Caso esteja clonando via Git (substitua a URL pelo seu repositório):
 
 ```bash
-git clone <URL_DO_SEU_REPO> ~/dotfiles && sudo ~/dotfiles/bootstrap.sh
+git clone https://github.com/evanbs/dotfiles ~/dotfiles && sudo ~/dotfiles/bootstrap.sh
 ```
 
 Por padrão usa o usuário atual do sistema. Você pode ajustar em `group_vars/all.yml`.
