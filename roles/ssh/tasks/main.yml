@@ -1,0 +1,30 @@
+---
+- name: Ensure .ssh directory exists
+  file:
+    path: "/home/{{ dev_username }}/.ssh"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0700'
+
+- name: Generate SSH key if absent (RSA 4096 PEM)
+  become_user: "{{ dev_username }}"
+  args:
+    creates: "/home/{{ dev_username }}/.ssh/id_rsa"
+  shell: |
+    ssh-keygen -t rsa -b 4096 -m PEM -C "dotfiles" -f "/home/{{ dev_username }}/.ssh/id_rsa" -N "" | cat
+  executable: /bin/bash
+
+- name: Copy public key to clipboard using functions clip
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    if [ -f "/home/{{ dev_username }}/.functions" ]; then
+      . "/home/{{ dev_username }}/.functions"
+    fi
+    clip "/home/{{ dev_username }}/.ssh/id_rsa.pub"
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+

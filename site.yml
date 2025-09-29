@@ -11,5 +11,6 @@
     - role: ohmyzsh
     - role: starship
     - role: dotfiles
+    - role: ssh
 
 
