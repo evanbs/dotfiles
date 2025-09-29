@@ -11,10 +11,9 @@
   become_user: "{{ dev_username }}"
   args:
     creates: "/home/{{ dev_username }}/.ssh/id_rsa"
+    executable: /bin/bash
   shell: |
     ssh-keygen -t rsa -b 4096 -m PEM -C "dotfiles" -f "/home/{{ dev_username }}/.ssh/id_rsa" -N "" | cat
-  args:
-    executable: /bin/bash
 
 - name: Copy public key to clipboard using functions clip
   become_user: "{{ dev_username }}"
