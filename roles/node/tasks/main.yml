@@ -1,0 +1,70 @@
+---
+- name: Ensure NVM directory exists
+  file:
+    path: "/home/{{ dev_username }}/.nvm"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+- name: Install NVM if not present
+  become_user: "{{ dev_username }}"
+  args:
+    creates: "/home/{{ dev_username }}/.nvm/nvm.sh"
+    executable: /bin/bash
+  shell: |
+    set -euo pipefail
+    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+- name: Load NVM in current shell
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm --version | cat
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: Install Node LTS and set default via NVM
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm install --lts
+    nvm alias default 'lts/*'
+  args:
+    executable: /bin/bash
+
+- name: Ensure corepack is enabled (for yarn/pnpm availability)
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm use default
+    corepack enable
+  args:
+    executable: /bin/bash
+
+- name: Install yarn and pnpm via corepack prepare
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm use default
+    corepack prepare yarn@stable --activate
+    corepack prepare pnpm@latest --activate
+  args:
+    executable: /bin/bash
+
+- name: Install Biome globally with pnpm
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm use default
+    pnpm add -g @biomejs/biome
+  args:
+    executable: /bin/bash
+
+

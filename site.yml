@@ -10,6 +10,7 @@
     - role: zsh
     - role: ohmyzsh
     - role: starship
+    - role: node
     - role: dotfiles
     - role: ssh
 
