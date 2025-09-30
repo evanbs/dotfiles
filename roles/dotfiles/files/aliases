@@ -9,3 +9,4 @@ alias l="eza --icons=always --color=always --group-directories-first --git --git
 alias ll="eza --icons=always --color=always --group-directories-first --git --git-repos --long --octal-permissions --header"
 alias tree="eza --icons=always --color=always --group-directories-first --tree"
 alias http="httpyac"
+alias wsl="wsl.exe"
