@@ -31,6 +31,10 @@
       tags: ['node', 'packages']
       when: install_node | bool
 
+    - role: biome
+      tags: ['biome', 'packages']
+      when: install_biome | bool
+
     - role: dotfiles
       tags: ['dotfiles', 'config']
       when: install_dotfiles | bool

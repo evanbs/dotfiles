@@ -1,0 +1,10 @@
+---
+- name: Install Biome.js globally
+  community.general.npm:
+    name: "@biomejs/biome"
+    global: yes
+    state: present
+  become: yes
+  tags:
+    - install
+    - biome
