@@ -1,0 +1,44 @@
+---
+- name: Ensure necessary packages for SDKMAN are installed
+  ansible.builtin.package:
+    name: 
+      - curl
+      - zip
+      - unzip
+    state: present
+  become: yes
+
+- name: Check if SDKMAN is already installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
+  register: sdkman_installed
+
+- name: Install SDKMAN
+  ansible.builtin.shell: |
+    curl -s "https://get.sdkman.io" | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
+  when: not sdkman_installed.stat.exists
+  become: no
+
+- name: Source SDKMAN init script for current session (for subsequent tasks)
+  ansible.builtin.shell: |
+    source "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
+    sdk version
+  args:
+    executable: /bin/bash
+  register: sdkman_version_check
+  changed_when: false
+  when: not sdkman_installed.stat.exists
+  become: no
+
+- name: Install Java 17 Temurin using SDKMAN
+  ansible.builtin.shell: |
+    source "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
+    sdk install java 17.0.9-tem
+    sdk default java 17.0.9-tem
+  args:
+    executable: /bin/bash
+    creates: "{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
+  when: not sdkman_installed.stat.exists
+  become: no

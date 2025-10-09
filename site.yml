@@ -35,6 +35,10 @@
       tags: ['biome', 'packages']
       when: install_biome | bool
 
+    - role: sdkman
+      tags: ['sdkman', 'packages']
+      when: install_sdkman | bool
+
     - role: dotfiles
       tags: ['dotfiles', 'config']
       when: install_dotfiles | bool
