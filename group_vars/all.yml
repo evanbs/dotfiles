@@ -7,4 +7,16 @@ sudo_nopasswd: true
 # Optionally, set sudo timestamp timeout (minutes). Omit to keep system default
 # sudo_timestamp_timeout: 30
 
+# --- Git Configuration ---
+git_user_name: "Evandro Barbosa"
+git_user_email: "evandro.barbosa@yahoo.com.br"
 
+# --- Role Toggles ---
+# Set to false to disable the installation of a component
+install_sudo_rules: true
+install_homebrew: true
+install_zsh: true
+install_starship: true
+install_node: true
+install_dotfiles: true
+install_ssh_config: true

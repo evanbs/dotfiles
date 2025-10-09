@@ -24,6 +24,51 @@ Se preferir clonar o repositório manualmente primeiro:
 git clone https://github.com/evanbs/dotfiles ~/dotfiles && sudo ~/dotfiles/bootstrap.sh
 ```
 
+### Customização
+
+É possível customizar a instalação editando o arquivo `group_vars/all.yml`.
+
+#### Variáveis de Instalação
+
+Você pode ativar ou desativar a instalação de grupos de funcionalidades alterando as seguintes variáveis para `true` ou `false`:
+
+```yaml
+install_sudo_rules: true
+install_homebrew: true
+install_zsh: true
+install_starship: true
+install_node: true
+install_dotfiles: true
+install_ssh_config: true
+```
+
+#### Configuração do Git
+
+Suas informações de usuário do Git também são configuradas neste arquivo:
+
+```yaml
+git_user_name: "Seu Nome"
+git_user_email: "seu-email@example.com"
+```
+
+#### Execução com Tags
+
+Para executar apenas partes específicas do playbook (por exemplo, para atualizar apenas uma configuração), você pode usar `tags` ao rodar o `ansible-playbook` manualmente.
+
+**Exemplos:**
+```bash
+# Executar apenas as configurações de shell (zsh, oh-my-zsh, starship)
+ansible-playbook site.yml --tags "shell,prompt"
+
+# Aplicar apenas as configurações de dotfiles
+ansible-playbook site.yml --tags "config"
+
+# Instalar apenas pacotes (homebrew, node)
+ansible-playbook site.yml --tags "packages"
+```
+
+As tags disponíveis são: `base`, `user`, `sudo`, `packages`, `homebrew`, `node`, `shell`, `zsh`, `prompt`, `starship`, `config`, `dotfiles`, `security`, `ssh`.
+
 ### Verificações pós-provisionamento
 
 ```bash

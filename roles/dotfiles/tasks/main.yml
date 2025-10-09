@@ -6,10 +6,10 @@
     dest: "/home/{{ dev_username }}/.aliases"
     mode: '0644'
 
-- name: Deploy .gitconfig
+- name: Deploy .gitconfig from template
   become_user: "{{ dev_username }}"
-  copy:
-    src: "{{ role_path }}/files/gitconfig"
+  template:
+    src: "{{ role_path }}/templates/gitconfig.j2"
     dest: "/home/{{ dev_username }}/.gitconfig"
     mode: '0644'
 

@@ -5,13 +5,38 @@
     brew_prefix: "/home/linuxbrew/.linuxbrew"
   roles:
     - role: user
+      tags: ['user', 'base']
+
     - role: sudo
+      tags: ['sudo', 'base']
+      when: install_sudo_rules | bool
+
     - role: homebrew
+      tags: ['homebrew', 'packages']
+      when: install_homebrew | bool
+
     - role: zsh
+      tags: ['zsh', 'shell']
+      when: install_zsh | bool
+
     - role: ohmyzsh
+      tags: ['zsh', 'shell']
+      when: install_zsh | bool
+
     - role: starship
+      tags: ['starship', 'prompt']
+      when: install_starship | bool
+
     - role: node
+      tags: ['node', 'packages']
+      when: install_node | bool
+
     - role: dotfiles
+      tags: ['dotfiles', 'config']
+      when: install_dotfiles | bool
+
     - role: ssh
+      tags: ['ssh', 'security']
+      when: install_ssh_config | bool
 
 
