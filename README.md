@@ -8,13 +8,21 @@ Provisiona um usuário de desenvolvimento sem sudo, Homebrew no Linux, zsh + oh-
 
 ### Execução (um comando)
 
-Caso esteja clonando via Git (substitua a URL pelo seu repositório):
+Por padrão, o playbook usa o usuário atual do sistema para a configuração. Você pode ajustar as variáveis em `group_vars/all.yml`.
+
+O método recomendado é executar o script de bootstrap diretamente via `curl`. Este comando irá baixar e executar o script, que cuidará de todo o processo automaticamente.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/evanbs/dotfiles/main/bootstrap.sh | bash
+```
+
+#### Método Alternativo (Clone Manual)
+
+Se preferir clonar o repositório manualmente primeiro:
 
 ```bash
 git clone https://github.com/evanbs/dotfiles ~/dotfiles && sudo ~/dotfiles/bootstrap.sh
 ```
-
-Por padrão usa o usuário atual do sistema. Você pode ajustar em `group_vars/all.yml`.
 
 ### Verificações pós-provisionamento
 

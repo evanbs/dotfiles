@@ -18,7 +18,7 @@ if [ "${EUID}" -ne 0 ]; then
   log "Este script precisa ser executado como root. Tentando re-executar com sudo..."
   # Este truque re-executa o script a partir da URL com sudo.
   # Assumimos que o script está nesta URL específica.
-  exec sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/evanbs/dotfiles/main/bootstrap.sh)"
+  sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/evanbs/dotfiles/main/bootstrap.sh)"
   exit
 fi
 
