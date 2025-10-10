@@ -1,0 +1,46 @@
+---
+- name: Install dependencies for Docker
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+  become: yes
+
+- name: Add Docker GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: yes
+
+- name: Add Docker APT repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+  become: yes
+
+- name: Install Docker packages
+  ansible.builtin.package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ dev_username }}"
+    groups: docker
+    append: yes
+  become: yes
+
+- name: Install localstack-cli
+  ansible.builtin.pip:
+    name: localstack-cli
+    state: present
+  become: no

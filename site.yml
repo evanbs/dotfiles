@@ -65,6 +65,10 @@
       tags: ['gemini-cli', 'cli-tools']
       when: install_gemini_cli | bool
 
+    - role: docker
+      tags: ['docker', 'containerization']
+      when: install_docker | bool
+
     - role: dotfiles
       tags: ['dotfiles', 'config']
       when: install_dotfiles | bool
