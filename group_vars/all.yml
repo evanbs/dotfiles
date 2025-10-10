@@ -23,6 +23,5 @@ install_ssh_config: true
 install_biome: true
 install_sdkman: true
 install_kvm: true
-install_gemini_cli: true
 install_docker: true
 install_rust: true

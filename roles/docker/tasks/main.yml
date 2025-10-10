@@ -27,9 +27,13 @@
   ansible.builtin.debug:
     msg: "Architecture: {{ ansible_facts['architecture'] }}, Codename: {{ ansible_facts['lsb']['codename'] }}"
 
+- name: Set Docker distribution release variable
+  ansible.builtin.set_fact:
+    docker_dist_release: "{{ 'bookworm' if ansible_facts['distribution'] == 'Debian' and ansible_facts['lsb']['codename'] == 'trixie' else ansible_facts['lsb']['codename'] }}"
+
 - name: Add Docker APT repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch={{ ansible_facts['architecture'] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_facts['lsb']['codename'] }} stable"
+    repo: "deb [arch={{ ansible_facts['architecture'] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ docker_dist_release }} stable"
     state: present
     filename: docker
   become: yes
