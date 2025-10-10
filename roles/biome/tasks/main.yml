@@ -1,10 +1,13 @@
 ---
 - name: Install Biome.js globally
-  community.general.npm:
-    name: "@biomejs/biome"
-    global: yes
-    state: present
-  become: yes
+  become_user: "{{ dev_username }}"
+  shell: |
+    set -euo pipefail
+    . "/home/{{ dev_username }}/.nvm/nvm.sh"
+    nvm use default
+    npm install -g @biomejs/biome
+  args:
+    executable: /bin/bash
   tags:
     - install
     - biome

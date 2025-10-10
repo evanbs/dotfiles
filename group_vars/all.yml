@@ -20,3 +20,4 @@ install_starship: true
 install_node: true
 install_dotfiles: true
 install_ssh_config: true
+install_biome: true
