@@ -1,6 +1,6 @@
 ---
 - name: Install gemini-cli
-  ansible.builtin.pip:
+  community.general.homebrew:
     name: gemini-cli
     state: present
   become: no
