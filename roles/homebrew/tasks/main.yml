@@ -100,5 +100,6 @@
     - wget
     - wl-clipboard
     - xclip
+    - watchman
 
 
