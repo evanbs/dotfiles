@@ -1,4 +1,10 @@
 ---
+- name: Ensure snapd is installed
+  ansible.builtin.package:
+    name: snapd
+    state: present
+  become: yes
+
 - name: Install Android Studio via Snap
   community.general.snap:
     name: android-studio
