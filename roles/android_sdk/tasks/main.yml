@@ -86,11 +86,11 @@
       - "build-tools;34.0.0"
       - "emulator"
       - "system-images;android-34;default;x86_64"
-    sdk_root: "{{ ansible_env.HOME }}/Android"
+    sdk_root: "{{ ansible_user_dir }}/Android"
     accept_licenses: true
     state: present
   become_user: "{{ dev_username }}"
   environment:
-    JAVA_HOME: "{{ ansible_env.HOME }}/.sdkman/candidates/java/current" # Use 'current' for SDKMAN
-    ANDROID_HOME: "{{ ansible_env.HOME }}/Android"
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin:{{ ansible_env.HOME }}/Android/platform-tools"
+    JAVA_HOME: "{{ ansible_user_dir }}/.sdkman/candidates/java/current" # Use 'current' for SDKMAN
+    ANDROID_HOME: "{{ ansible_user_dir }}/Android"
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/Android/cmdline-tools/latest/bin:{{ ansible_user_dir }}/Android/platform-tools"
