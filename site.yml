@@ -54,10 +54,6 @@
       when: install_kvm | bool
 
 
-    - role: gemini_cli
-      tags: ['gemini-cli', 'cli-tools']
-      when: install_gemini_cli | bool
-
     - role: docker
       tags: ['docker', 'containerization']
       when: install_docker | bool

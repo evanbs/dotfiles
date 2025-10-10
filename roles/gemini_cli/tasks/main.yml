@@ -1,6 +1,0 @@
----
-- name: Install gemini-cli
-  community.general.homebrew:
-    name: gemini-cli
-    state: present
-  become: no
