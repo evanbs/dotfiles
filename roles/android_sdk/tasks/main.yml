@@ -1,8 +1,60 @@
 ---
+- name: Create Android SDK root directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/Android"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+  become: yes
+
+- name: Download Android command-line tools
+  ansible.builtin.get_url:
+    url: https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+    dest: "/tmp/commandlinetools-linux-latest.zip"
+    mode: '0644'
+  become: no
+
+- name: Unarchive command-line tools
+  ansible.builtin.unarchive:
+    src: "/tmp/commandlinetools-linux-latest.zip"
+    dest: "{{ ansible_env.HOME }}/Android/cmdline-tools"
+    remote_src: yes
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+  become: yes
+
+- name: Move extracted tools to 'latest' subdirectory
+  ansible.builtin.command: mv {{ ansible_env.HOME }}/Android/cmdline-tools/cmdline-tools/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
+  args:
+    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
+  become: yes
+
+- name: Ensure 'latest' directory exists for cmdline-tools
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+  become: yes
+
+- name: Set ANDROID_HOME and update PATH in .zshrc
+  ansible.builtin.blockinfile:
+    path: "/home/{{ dev_username }}/.zshrc"
+    block: |
+      export ANDROID_HOME="{{ ansible_env.HOME }}/Android"
+      export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for Android SDK"
+    create: yes
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0644'
+  become: yes
+
 - name: Install Android SDK components using community.general.android_sdk
   community.general.android_sdk:
     name:
-      - "cmdline-tools;latest"
       - "platform-tools"
       - "platforms;android-34"
       - "build-tools;34.0.0"
@@ -11,7 +63,8 @@
     sdk_root: "{{ ansible_env.HOME }}/Android"
     accept_licenses: true
     state: present
+  become_user: "{{ dev_username }}"
   environment:
-    JAVA_HOME: "{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
-    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin"
-  become: no
+    JAVA_HOME: "{{ ansible_env.HOME }}/.sdkman/candidates/java/current" # Use 'current' for SDKMAN
+    ANDROID_HOME: "{{ ansible_env.HOME }}/Android"
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin:{{ ansible_env.HOME }}/Android/platform-tools"
