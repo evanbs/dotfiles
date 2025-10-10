@@ -1,0 +1,17 @@
+---
+- name: Install Android SDK components using community.general.android_sdk
+  community.general.android_sdk:
+    name:
+      - "cmdline-tools;latest"
+      - "platform-tools"
+      - "platforms;android-34"
+      - "build-tools;34.0.0"
+      - "emulator"
+      - "system-images;android-34;default;x86_64"
+    sdk_root: "{{ ansible_env.HOME }}/Android"
+    accept_licenses: true
+    state: present
+  environment:
+    JAVA_HOME: "{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin"
+  become: no

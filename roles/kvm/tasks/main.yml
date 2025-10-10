@@ -1,0 +1,32 @@
+---
+- name: Install QEMU/KVM and related packages
+  ansible.builtin.package:
+    name:
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-clients
+      - bridge-utils
+      - virt-manager
+    state: present
+  become: yes
+
+- name: Add user to libvirt group
+  ansible.builtin.user:
+    name: "{{ dev_username }}"
+    groups: libvirt
+    append: yes
+  become: yes
+
+- name: Add user to kvm group
+  ansible.builtin.user:
+    name: "{{ dev_username }}"
+    groups: kvm
+    append: yes
+  become: yes
+
+- name: Enable and start libvirtd service
+  ansible.builtin.service:
+    name: libvirtd
+    state: started
+    enabled: yes
+  become: yes

@@ -3,6 +3,16 @@
   vars:
     dev_username: "{{ dev_username | default(lookup('env','SUDO_USER') or lookup('env','USER')) }}"
     brew_prefix: "/home/linuxbrew/.linuxbrew"
+
+  pre_tasks:
+    - name: Ensure community.general collection is installed
+      ansible.builtin.command: ansible-galaxy collection install community.general
+      run_once: true
+      delegate_to: localhost
+      changed_when: false
+      tags:
+        - always
+
   roles:
     - role: user
       tags: ['user', 'base']
@@ -38,6 +48,18 @@
     - role: sdkman
       tags: ['sdkman', 'packages']
       when: install_sdkman | bool
+
+    - role: kvm
+      tags: ['kvm', 'virtualization']
+      when: install_kvm | bool
+
+    - role: android_sdk
+      tags: ['android-sdk', 'packages']
+      when: install_android_sdk | bool
+
+    - role: android_studio
+      tags: ['android-studio', 'applications']
+      when: install_android_studio | bool
 
     - role: dotfiles
       tags: ['dotfiles', 'config']
