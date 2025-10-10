@@ -15,7 +15,7 @@
     mode: '0644'
   become: no
 
-- name: Debug: List contents of command-line tools zip
+- name: "Debug: List contents of command-line tools zip"
   ansible.builtin.command: unzip -l /tmp/commandlinetools-linux-latest.zip
   register: zip_contents
   changed_when: false
