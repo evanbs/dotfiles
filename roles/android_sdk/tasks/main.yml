@@ -52,7 +52,7 @@
   register: extracted_top_level_dir
 
 - name: Move extracted cmdline-tools to 'latest' subdirectory
-    cmd: mv {{ extracted_top_level_dir.files[0].path }}/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
+    cmd: "mv {{ extracted_top_level_dir.files[0].path }}/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/"
   args:
     creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
   become: yes
