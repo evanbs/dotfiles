@@ -23,11 +23,20 @@
     force: yes
   become: yes
 
+- name: Debug Ansible facts for Docker repository
+  ansible.builtin.debug:
+    msg: "Architecture: {{ ansible_facts['architecture'] }}, Codename: {{ ansible_facts['lsb']['codename'] }}"
+
 - name: Add Docker APT repository
   ansible.builtin.apt_repository:
     repo: "deb [arch={{ ansible_facts['architecture'] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_facts['lsb']['codename'] }} stable"
     state: present
     filename: docker
+  become: yes
+
+- name: Update apt cache after adding Docker repository
+  ansible.builtin.apt:
+    update_cache: yes
   become: yes
 
 - name: Install Docker packages
