@@ -53,10 +53,6 @@
       tags: ['kvm', 'virtualization']
       when: install_kvm | bool
 
-    - role: android_sdk
-      tags: ['android-sdk', 'packages']
-      when: install_android_sdk | bool
-
     - role: android_studio
       tags: ['android-studio', 'applications']
       when: install_android_studio | bool
