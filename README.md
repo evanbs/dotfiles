@@ -93,6 +93,41 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
 - Copiar conteúdo para clipboard: `clip arquivo.txt` ou `echo "texto" | clip`.
 - Ordem de preferências: `wl-copy` (Wayland) → `xclip` (X11) → `pbcopy` (macOS) → `tmux buffer` → `OSC52`.
 
+## Estrutura do Projeto
+
+```
+.
+├── ansible.cfg
+├── bootstrap.sh
+├── README.md
+├── site.yml
+├── group_vars/
+│   └── all.yml
+├── inventory/
+│   └── hosts.ini
+└── roles/
+    ├── android_sdk/
+    ├── android_studio/
+    ├── aws_tools/
+    ├── biome/
+    ├── docker/
+    ├── dotfiles/
+    ├── gemini_cli/
+    ├── homebrew/
+    ├── kvm/
+    ├── node/
+    ├── ohmyzsh/
+    ├── pyenv/
+    ├── rust/
+    ├── sdkman/
+    ├── ssh/
+    ├── starship/
+    ├── sudo/
+    ├── user/
+    ├── vscode/
+    └── zsh/
+```
+
 ### Referências
 - `scruffaluff/bootware` em Ansible Galaxy
 - `legnoh/dotfiles` em Ansible Galaxy
