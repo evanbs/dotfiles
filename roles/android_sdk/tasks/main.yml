@@ -33,25 +33,19 @@
     group: "{{ dev_username }}"
   become: yes
 
-- name: Find the extracted cmdline-tools directory
+- name: Find the top-level extracted directory
   ansible.builtin.find:
     paths: "/tmp/android-tools-extract"
-    patterns: "sdkmanager"
-    file_type: file
-    recurse: yes
-  register: sdkmanager_path
-
-- name: Set fact for extracted cmdline-tools root
-  ansible.builtin.set_fact:
-    extracted_cmdline_tools_root: "{{ sdkmanager_path.files[0].path | dirname | dirname | dirname }}"
-  when: sdkmanager_path.files | length > 0
+    file_type: directory
+    depth: 1
+  register: extracted_top_level_dir
 
 - name: Move extracted cmdline-tools contents to final destination
-  ansible.builtin.command: mv {{ extracted_cmdline_tools_root }}/* {{ ansible_env.HOME }}/Android/cmdline-tools/
+  ansible.builtin.command: mv {{ extracted_top_level_dir.files[0].path }}/* {{ ansible_env.HOME }}/Android/cmdline-tools/
   args:
     creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/bin/sdkmanager"
   become: yes
-  when: extracted_cmdline_tools_root is defined and (extracted_cmdline_tools_root | list | length > 0)
+  when: extracted_top_level_dir.files | length > 0
 
 - name: Clean up temporary extraction directory
   ansible.builtin.file:
