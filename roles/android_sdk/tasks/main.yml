@@ -15,6 +15,17 @@
     mode: '0644'
   become: no
 
+- name: Debug: List contents of command-line tools zip
+  ansible.builtin.command: unzip -l /tmp/commandlinetools-linux-latest.zip
+  register: zip_contents
+  changed_when: false
+  become: no
+
+- name: Debug: Print zip contents
+  ansible.builtin.debug:
+    var: zip_contents.stdout_lines
+  changed_when: false
+
 - name: Create temporary directory for command-line tools extraction
   ansible.builtin.file:
     path: "/tmp/android-tools-extract"
@@ -40,10 +51,10 @@
     depth: 1
   register: extracted_top_level_dir
 
-- name: Move extracted cmdline-tools contents to final destination
-  ansible.builtin.command: mv {{ extracted_top_level_dir.files[0].path }}/* {{ ansible_env.HOME }}/Android/cmdline-tools/
+- name: Move extracted cmdline-tools to 'latest' subdirectory
+  ansible.builtin.command: mv {{ extracted_top_level_dir.files[0].path }} {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
   args:
-    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/bin/sdkmanager"
+    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
   become: yes
   when: extracted_top_level_dir.files | length > 0
 
@@ -52,29 +63,6 @@
     path: "/tmp/android-tools-extract"
     state: absent
   become: yes
-
-- name: Ensure 'latest' directory exists for cmdline-tools
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest"
-    state: directory
-    owner: "{{ dev_username }}"
-    group: "{{ dev_username }}"
-    mode: '0755'
-  become: yes
-
-- name: Check if cmdline-tools directory has contents before moving to 'latest'
-  ansible.builtin.find:
-    paths: "{{ ansible_env.HOME }}/Android/cmdline-tools"
-    file_type: any
-    recurse: no
-  register: cmdline_tools_contents
-
-- name: Move contents of cmdline-tools to 'latest' subdirectory
-  ansible.builtin.command: mv {{ ansible_env.HOME }}/Android/cmdline-tools/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
-  args:
-    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
-  become: yes
-  when: cmdline_tools_contents.files | length > 0
 
 - name: Set ANDROID_HOME and update PATH in .zshrc
   ansible.builtin.blockinfile:
