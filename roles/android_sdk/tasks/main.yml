@@ -24,19 +24,26 @@
     mode: '0755'
   become: yes
 
-- name: Unarchive command-line tools
+- name: Unarchive command-line tools to temporary location
   ansible.builtin.unarchive:
     src: "/tmp/commandlinetools-linux-latest.zip"
-    dest: "{{ ansible_env.HOME }}/Android/cmdline-tools"
+    dest: "/tmp/android-tools-extract"
     remote_src: yes
     owner: "{{ dev_username }}"
     group: "{{ dev_username }}"
   become: yes
 
-- name: Move extracted tools to 'latest' subdirectory
-  ansible.builtin.command: mv {{ ansible_env.HOME }}/Android/cmdline-tools/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
+- name: Find the extracted cmdline-tools directory
+  ansible.builtin.find:
+    paths: "/tmp/android-tools-extract"
+    patterns: "cmdline-tools"
+    file_type: directory
+  register: extracted_cmdline_tools_dir
+
+- name: Move extracted cmdline-tools to final destination
+  ansible.builtin.command: mv {{ extracted_cmdline_tools_dir.files[0].path }} {{ ansible_env.HOME }}/Android/cmdline-tools
   args:
-    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
+    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/bin/sdkmanager"
   become: yes
 
 - name: Ensure 'latest' directory exists for cmdline-tools
@@ -46,6 +53,12 @@
     owner: "{{ dev_username }}"
     group: "{{ dev_username }}"
     mode: '0755'
+  become: yes
+
+- name: Move contents of cmdline-tools to 'latest' subdirectory
+  ansible.builtin.command: mv {{ ansible_env.HOME }}/Android/cmdline-tools/* {{ ansible_env.HOME }}/Android/cmdline-tools/latest/
+  args:
+    creates: "{{ ansible_env.HOME }}/Android/cmdline-tools/latest/bin/sdkmanager"
   become: yes
 
 - name: Set ANDROID_HOME and update PATH in .zshrc
