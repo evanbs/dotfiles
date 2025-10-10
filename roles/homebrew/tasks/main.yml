@@ -101,5 +101,6 @@
     - wl-clipboard
     - xclip
     - watchman
+    - fzf
 
 
