@@ -1,16 +1,11 @@
 ---
-- name: Debug distribution info
-  ansible.builtin.debug:
-    msg: "Distribution: {{ ansible_distribution }}, Release: {{ ansible_distribution_release }}"
-
-- name: Install dependencies for Docker
+- name: Install prerequisites for Docker
   ansible.builtin.package:
     name:
-      - apt-transport-https
       - ca-certificates
       - curl
-      - gnupg
     state: present
+    update_cache: yes
   become: yes
 
 - name: Create directory for APT keyrings
@@ -22,7 +17,7 @@
 
 - name: Download Docker GPG key
   ansible.builtin.get_url:
-    url: https://download.docker.com/linux/ubuntu/gpg
+    url: https://download.docker.com/linux/debian/gpg
     dest: /etc/apt/keyrings/docker.asc
     mode: '0644'
     force: yes
@@ -30,8 +25,9 @@
 
 - name: Add Docker APT repository
   ansible.builtin.apt_repository:
-    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    repo: "deb [arch={{ ansible_facts['architecture'] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_facts['lsb']['codename'] }} stable"
     state: present
+    filename: docker
   become: yes
 
 - name: Install Docker packages
@@ -41,6 +37,7 @@
       - docker-ce-cli
       - containerd.io
       - docker-buildx-plugin
+      - docker-compose-plugin
     state: present
     update_cache: yes
   become: yes
@@ -51,4 +48,3 @@
     groups: docker
     append: yes
   become: yes
-
