@@ -106,8 +106,6 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
 ├── inventory/
 │   └── hosts.ini
 └── roles/
-    ├── android_sdk/
-    ├── android_studio/
     ├── aws_tools/
     ├── biome/
     ├── docker/
