@@ -39,8 +39,3 @@
     append: yes
   become: yes
 
-- name: Install localstack-cli
-  ansible.builtin.pip:
-    name: localstack-cli
-    state: present
-  become: no

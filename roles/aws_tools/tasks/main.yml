@@ -1,0 +1,9 @@
+---
+- name: Install AWS CLI, aws-cli-local, and localstack-cli
+  ansible.builtin.pip:
+    name:
+      - awscli
+      - aws-cli-local
+      - localstack-cli
+    state: present
+  become: no
