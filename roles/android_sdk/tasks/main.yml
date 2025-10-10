@@ -15,9 +15,9 @@
     mode: '0644'
   become: no
 
-- name: Create cmdline-tools directory
+- name: Create temporary directory for command-line tools extraction
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/Android/cmdline-tools"
+    path: "/tmp/android-tools-extract"
     state: directory
     owner: "{{ dev_username }}"
     group: "{{ dev_username }}"
