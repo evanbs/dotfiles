@@ -108,7 +108,7 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
 └── roles/
     ├── aws_tools/
     ├── biome/
-    ├── docker/
+
     ├── dotfiles/
     ├── gemini_cli/
     ├── homebrew/

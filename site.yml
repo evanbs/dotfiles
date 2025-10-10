@@ -53,11 +53,6 @@
       tags: ['kvm', 'virtualization']
       when: install_kvm | bool
 
-
-    - role: docker
-      tags: ['docker', 'containerization']
-      when: install_docker | bool
-
     - role: rust
       tags: ['rust', 'languages']
       when: install_rust | bool
