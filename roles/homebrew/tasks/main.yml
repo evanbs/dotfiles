@@ -102,5 +102,7 @@
     - xclip
     - watchman
     - fzf
+    - htop
+    - ncdu
 
 
