@@ -61,6 +61,10 @@
       tags: ['android-studio', 'applications']
       when: install_android_studio | bool
 
+    - role: gemini_cli
+      tags: ['gemini-cli', 'cli-tools']
+      when: install_gemini_cli | bool
+
     - role: dotfiles
       tags: ['dotfiles', 'config']
       when: install_dotfiles | bool

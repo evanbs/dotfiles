@@ -1,0 +1,6 @@
+---
+- name: Install gemini-cli
+  ansible.builtin.pip:
+    name: gemini-cli
+    state: present
+  become: no
