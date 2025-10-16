@@ -49,6 +49,10 @@
       tags: ['sdkman', 'packages']
       when: install_sdkman | bool
 
+    - role: snap
+      tags: ['snap', 'packages']
+      when: install_snap | bool
+
     - role: kvm
       tags: ['kvm', 'virtualization']
       when: install_kvm | bool

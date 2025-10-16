@@ -1,0 +1,14 @@
+---
+- name: Install snapd using apt
+  become: true
+  ansible.builtin.apt:
+    name: snapd
+    state: present
+    update_cache: yes
+
+- name: Ensure /snap/bin is in PATH for all users
+  become: true
+  ansible.builtin.copy:
+    content: 'export PATH=$PATH:/snap/bin'
+    dest: /etc/profile.d/snap.sh
+    mode: '0755'
