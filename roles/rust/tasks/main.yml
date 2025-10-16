@@ -4,15 +4,14 @@
     set -euo pipefail
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
   args:
-    creates: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+    creates: "/home/{{ dev_username }}/.cargo/bin/rustup"
     executable: /bin/bash
   become: no
 
 - name: Ensure Cargo bin directory is in PATH for current session (for subsequent tasks)
   ansible.builtin.shell: |
     set -euo pipefail
-    . "{{ ansible_env.HOME }}/.cargo/env"
-    cargo --version | cat
+    . "/home/{{ dev_username }}/.cargo/env"
   args:
     executable: /bin/bash
   changed_when: false
@@ -21,7 +20,7 @@
 - name: Install default Rust toolchain
   ansible.builtin.shell: |
     set -euo pipefail
-    . "{{ ansible_env.HOME }}/.cargo/env"
+    . "/home/{{ dev_username }}/.cargo/env"
     rustup default stable
   args:
     executable: /bin/bash

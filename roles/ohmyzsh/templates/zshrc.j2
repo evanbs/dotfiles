@@ -1,10 +1,17 @@
 # Managed by Ansible
 export ZSH="$HOME/.oh-my-zsh"
 
+ZSH_THEME="robbyrussell"
+plugins=(git you-should-use zsh-autosuggestions history-substring-search zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Homebrew
+eval "$({{ brew_prefix }}/bin/brew shellenv)"
 
 # SDKMAN Java Home
 export JAVA_HOME="{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
@@ -12,14 +19,6 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 # Rust/Cargo
 [ -f "{{ ansible_env.HOME }}/.cargo/env" ] && source "{{ ansible_env.HOME }}/.cargo/env"
-
-ZSH_THEME="robbyrussell"
-plugins=(git you-should-use zsh-autosuggestions history-substring-search zsh-syntax-highlighting)
-
-# Homebrew early to expose brew-installed binaries (eza, starship, etc.)
-eval "$({{ brew_prefix }}/bin/brew shellenv)"
-
-source $ZSH/oh-my-zsh.sh
 
 # Aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
