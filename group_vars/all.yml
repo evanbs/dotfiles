@@ -24,4 +24,3 @@ install_biome: true
 install_sdkman: true
 install_snap: true
 install_kvm: true
-install_rust: true

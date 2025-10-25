@@ -10,7 +10,7 @@
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
   args:
-    executable: /bin/bash
+    executable: /bin/zsh
 
 - name: Ensure .zshrc exists and sets ZSH and plugins
   become_user: "{{ dev_username }}"

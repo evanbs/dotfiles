@@ -116,7 +116,6 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
     ├── node/
     ├── ohmyzsh/
     ├── pyenv/
-    ├── rust/
     ├── sdkman/
     ├── ssh/
     ├── starship/

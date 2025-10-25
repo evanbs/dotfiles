@@ -57,10 +57,6 @@
       tags: ['kvm', 'virtualization']
       when: install_kvm | bool
 
-    - role: rust
-      tags: ['rust', 'languages']
-      when: install_rust | bool
-
     - role: dotfiles
       tags: ['dotfiles', 'config']
       when: install_dotfiles | bool

@@ -17,9 +17,6 @@ eval "$({{ brew_prefix }}/bin/brew shellenv)"
 export JAVA_HOME="{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
 export PATH="$JAVA_HOME/bin:$PATH"
 
-# Rust/Cargo
-[ -f "{{ ansible_env.HOME }}/.cargo/env" ] && source "{{ ansible_env.HOME }}/.cargo/env"
-
 # Aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
