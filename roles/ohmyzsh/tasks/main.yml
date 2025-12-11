@@ -1,4 +1,9 @@
 ---
+- name: Ensure brew zsh path exists
+  stat:
+    path: "{{ brew_prefix }}/bin/zsh"
+  register: zsh_brew
+
 - name: Install oh-my-zsh for current user if missing
   become_user: "{{ dev_username }}"
   shell: |
@@ -10,7 +15,7 @@
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
   args:
-    executable: /bin/zsh
+    executable: "{{ (zsh_brew.stat.exists | ternary(brew_prefix + '/bin/zsh', '/usr/bin/zsh')) }}"
 
 - name: Ensure .zshrc exists and sets ZSH and plugins
   become_user: "{{ dev_username }}"
@@ -60,5 +65,144 @@
     path: "/home/{{ dev_username }}/.zshrc"
     regexp: '^plugins='
     line: 'plugins=(git you-should-use zsh-autosuggestions history-substring-search zsh-syntax-highlighting)'
+
+- name: Validate oh-my-zsh installation
+  become_user: "{{ dev_username }}"
+  block:
+    - name: Check if oh-my-zsh directory exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh"
+      register: ohmyzsh_dir
+
+    - name: Check if oh-my-zsh.sh script exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh/oh-my-zsh.sh"
+      register: ohmyzsh_script
+
+    - name: Check if .zshrc exists
+      stat:
+        path: "/home/{{ dev_username }}/.zshrc"
+      register: zshrc_file
+
+    - name: Check if .zshrc has ZSH variable set
+      shell: |
+        grep -q '^export ZSH=' "/home/{{ dev_username }}/.zshrc" || grep -q '^ZSH=' "/home/{{ dev_username }}/.zshrc"
+      args:
+        executable: /bin/bash
+      register: zshrc_zsh_var
+      changed_when: false
+      failed_when: false
+
+    - name: Check if .zshrc sources oh-my-zsh
+      shell: |
+        grep -q 'source.*oh-my-zsh.sh' "/home/{{ dev_username }}/.zshrc" || grep -q '\.oh-my-zsh/oh-my-zsh.sh' "/home/{{ dev_username }}/.zshrc"
+      args:
+        executable: /bin/bash
+      register: zshrc_sources_ohmyzsh
+      changed_when: false
+      failed_when: false
+
+    - name: Check if plugins directory exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins"
+      register: plugins_dir
+
+    - name: Check if zsh-autosuggestions plugin exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+      register: plugin_autosuggestions
+
+    - name: Check if zsh-syntax-highlighting plugin exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+      register: plugin_syntax_highlighting
+
+    - name: Check if you-should-use plugin exists
+      stat:
+        path: "/home/{{ dev_username }}/.oh-my-zsh/custom/plugins/you-should-use"
+      register: plugin_you_should_use
+
+    - name: Check if plugins are listed in .zshrc
+      shell: |
+        grep -q 'plugins=.*zsh-autosuggestions' "/home/{{ dev_username }}/.zshrc" && \
+        grep -q 'plugins=.*zsh-syntax-highlighting' "/home/{{ dev_username }}/.zshrc" && \
+        grep -q 'plugins=.*you-should-use' "/home/{{ dev_username }}/.zshrc"
+      args:
+        executable: /bin/bash
+      register: plugins_in_zshrc
+      changed_when: false
+      failed_when: false
+
+    - name: Get zsh path
+      shell: |
+        command -v zsh || echo ""
+      args:
+        executable: /bin/bash
+      register: zsh_path_result
+      changed_when: false
+      failed_when: false
+
+    - name: Get user default shell
+      shell: |
+        getent passwd "{{ dev_username }}" | cut -d: -f7
+      args:
+        executable: /bin/bash
+      register: user_shell
+      changed_when: false
+      failed_when: false
+
+    - name: Verify oh-my-zsh installation
+      assert:
+        that:
+          - ohmyzsh_dir.stat.exists
+          - ohmyzsh_script.stat.exists
+          - zshrc_file.stat.exists
+          - zshrc_zsh_var.rc == 0
+          - zshrc_sources_ohmyzsh.rc == 0
+          - plugins_dir.stat.exists
+          - plugin_autosuggestions.stat.exists
+          - plugin_syntax_highlighting.stat.exists
+          - plugin_you_should_use.stat.exists
+          - plugins_in_zshrc.rc == 0
+        fail_msg: |
+          oh-my-zsh installation validation failed:
+          - Directory exists: {{ ohmyzsh_dir.stat.exists }}
+          - Script exists: {{ ohmyzsh_script.stat.exists }}
+          - .zshrc exists: {{ zshrc_file.stat.exists }}
+          - ZSH variable in .zshrc: {{ zshrc_zsh_var.rc == 0 }}
+          - Sources oh-my-zsh: {{ zshrc_sources_ohmyzsh.rc == 0 }}
+          - Plugins directory exists: {{ plugins_dir.stat.exists }}
+          - zsh-autosuggestions: {{ plugin_autosuggestions.stat.exists }}
+          - zsh-syntax-highlighting: {{ plugin_syntax_highlighting.stat.exists }}
+          - you-should-use: {{ plugin_you_should_use.stat.exists }}
+          - Plugins in .zshrc: {{ plugins_in_zshrc.rc == 0 }}
+        success_msg: |
+          oh-my-zsh installation validated successfully:
+          - Directory: /home/{{ dev_username }}/.oh-my-zsh
+          - Script: oh-my-zsh.sh
+          - Configuration: .zshrc
+          - Plugins: zsh-autosuggestions, zsh-syntax-highlighting, you-should-use
+          - Zsh path: {{ zsh_path_result.stdout if zsh_path_result.stdout else 'not in PATH' }}
+          - User shell: {{ user_shell.stdout }}
+
+    - name: Display validation summary
+      debug:
+        msg: |
+          ===========================================
+          oh-my-zsh Validation Summary
+          ===========================================
+          ✓ oh-my-zsh directory: {{ 'OK' if ohmyzsh_dir.stat.exists else 'FAIL' }}
+          ✓ oh-my-zsh.sh script: {{ 'OK' if ohmyzsh_script.stat.exists else 'FAIL' }}
+          ✓ .zshrc file: {{ 'OK' if zshrc_file.stat.exists else 'FAIL' }}
+          ✓ ZSH variable configured: {{ 'OK' if zshrc_zsh_var.rc == 0 else 'FAIL' }}
+          ✓ Sources oh-my-zsh: {{ 'OK' if zshrc_sources_ohmyzsh.rc == 0 else 'FAIL' }}
+          ✓ Plugins directory: {{ 'OK' if plugins_dir.stat.exists else 'FAIL' }}
+          ✓ zsh-autosuggestions: {{ 'OK' if plugin_autosuggestions.stat.exists else 'FAIL' }}
+          ✓ zsh-syntax-highlighting: {{ 'OK' if plugin_syntax_highlighting.stat.exists else 'FAIL' }}
+          ✓ you-should-use: {{ 'OK' if plugin_you_should_use.stat.exists else 'FAIL' }}
+          ✓ Plugins in .zshrc: {{ 'OK' if plugins_in_zshrc.rc == 0 else 'FAIL' }}
+          ℹ Zsh path: {{ zsh_path_result.stdout if zsh_path_result.stdout else 'not found in PATH' }}
+          ℹ User shell: {{ user_shell.stdout }}
+          ===========================================
 
 

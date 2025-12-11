@@ -13,9 +13,18 @@ export NVM_DIR="$HOME/.nvm"
 # Homebrew
 eval "$({{ brew_prefix }}/bin/brew shellenv)"
 
-# SDKMAN Java Home
-export JAVA_HOME="{{ ansible_env.HOME }}/.sdkman/candidates/java/17.0.9-tem"
-export PATH="$JAVA_HOME/bin:$PATH"
+# SDKMAN
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
+# SDKMAN Java Home (only if Java is installed)
+if [ -d "$HOME/.sdkman/candidates/java/current" ]; then
+    export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+    export PATH="$JAVA_HOME/bin:$PATH"
+elif [ -d "$HOME/.sdkman/candidates/java/17.0.9-tem" ]; then
+    export JAVA_HOME="$HOME/.sdkman/candidates/java/17.0.9-tem"
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
 
 # Aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"

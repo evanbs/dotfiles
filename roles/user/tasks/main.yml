@@ -13,6 +13,16 @@
     content: |
       # Managed by Ansible
       export PATH="$PATH:{{ brew_prefix }}/bin"
+      
+      # Auto-start zsh if not already running
+      # This ensures zsh starts even if the default shell isn't set correctly
+      if [ -z "$ZSH_VERSION" ] && [ -f {{ brew_prefix }}/bin/zsh ]; then
+        export SHELL={{ brew_prefix }}/bin/zsh
+        exec {{ brew_prefix }}/bin/zsh -l
+      elif [ -z "$ZSH_VERSION" ] && [ -f /usr/bin/zsh ]; then
+        export SHELL=/usr/bin/zsh
+        exec /usr/bin/zsh -l
+      fi
     owner: "{{ dev_username }}"
     group: "{{ dev_username }}"
     mode: '0644'
