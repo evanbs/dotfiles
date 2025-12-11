@@ -77,12 +77,6 @@
   args:
     executable: /bin/bash
 
-- name: Add httpyac tap (anweber/httpyac)
-  become_user: "{{ dev_username }}"
-  shell: "{{ brew_prefix }}/bin/brew tap anweber/httpyac | cat"
-  args:
-    executable: /bin/bash
-
 - name: Ensure developer CLI tools are installed via brew
   become_user: "{{ dev_username }}"
   shell: "{{ brew_prefix }}/bin/brew list {{ item }} >/dev/null 2>&1 || {{ brew_prefix }}/bin/brew install {{ item }} | cat"
