@@ -11,13 +11,19 @@ sudo_nopasswd: true
 git_user_name: "Evandro Barbosa"
 git_user_email: "evandro.barbosa@yahoo.com.br"
 
+# --- Node.js Configuration (using FNM instead of NVM) ---
+install_node: true
+node_version: "lts-latest"
+
+# --- Bun Configuration ---
+install_bun: true
+
 # --- Role Toggles ---
 # Set to false to disable the installation of a component
 install_sudo_rules: true
 install_homebrew: true
 install_zsh: true
 install_starship: true
-install_node: true
 install_dotfiles: true
 install_ssh_config: true
 install_biome: true

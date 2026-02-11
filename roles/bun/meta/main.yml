@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: evandro
+  description: Install Bun - JavaScript/TypeScript runtime and package manager
+  min_ansible_version: '2.9'
+dependencies:
+  - role: homebrew

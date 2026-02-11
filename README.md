@@ -2,6 +2,52 @@
 
 Provisiona um usuário de desenvolvimento sem sudo, Homebrew no Linux, zsh + oh-my-zsh, starship (tema Catppuccin Frappe) e dotfiles básicos (`.aliases`, `.zshrc`, `.gitconfig`).
 
+### O que mudou?
+
+#### FNM vs NVM
+
+Este projeto migrou de NVM para FNM (Fast Node Manager) por:
+
+- Performance superior (até 40x mais rápido)
+- Instalação centralizada via Homebrew
+- Menor impacto no startup do shell (~10ms vs ~200ms do NVM)
+- Compatibilidade total com projetos existentes (`.nvmrc` e `.node-version`)
+- Auto-switch de versão do Node por projeto
+
+#### Comandos equivalentes
+
+| NVM | FNM |
+|-----|-----|
+| `nvm install --lts` | `fnm install --lts` |
+| `nvm use` | `fnm use` (automático com `--use-on-cd`) |
+| `nvm alias default` | `fnm default` |
+| `nvm list` | `fnm list` |
+| `nvm current` | `fnm current` |
+
+#### Bun - All-in-One JavaScript Runtime
+
+Este projeto também inclui o Bun, um runtime JavaScript/TypeScript ultrarrápido que oferece:
+
+- Runtime compatível com Node.js
+- Package manager integrado (alternativa ao npm/yarn/pnpm)
+- Bundler nativo
+- Test runner integrado
+- Performance significativamente superior ao Node.js
+
+Bun e Node.js (via FNM) coexistem no sistema. Você pode escolher qual usar:
+
+```bash
+# Usar Bun
+bun install
+bun run dev
+
+# Usar Node.js/npm
+npm install
+npm run dev
+```
+
+Para desabilitar a instalação do Bun, defina `install_bun: false` em `group_vars/all.yml`.
+
 ### Pré-requisitos
 - Usuário atual com privilégios de `sudo` (será solicitado senha)
 - Linux (Debian/Ubuntu recomendado; WSL2 suportado)
@@ -67,7 +113,7 @@ ansible-playbook site.yml --tags "config"
 ansible-playbook site.yml --tags "packages"
 ```
 
-As tags disponíveis são: `base`, `user`, `sudo`, `packages`, `homebrew`, `node`, `shell`, `zsh`, `prompt`, `starship`, `config`, `dotfiles`, `security`, `ssh`.
+As tags disponíveis são: `base`, `user`, `sudo`, `packages`, `homebrew`, `fnm`, `node`, `bun`, `javascript`, `shell`, `zsh`, `prompt`, `starship`, `config`, `dotfiles`, `security`, `ssh`.
 
 ### Verificações pós-provisionamento
 
@@ -75,6 +121,8 @@ As tags disponíveis são: `base`, `user`, `sudo`, `packages`, `homebrew`, `node
 id "$USER"
 echo $SHELL
 brew --version && git --version && delta --version && starship --version
+fnm --version && node --version && npm --version
+bun --version
 # Clipboard (cat copia para a área de transferência)
 echo "hello" | cat
 ```
@@ -108,25 +156,58 @@ Opcionalmente, é possível definir `sudo_timestamp_timeout` (em minutos) para r
 └── roles/
     ├── aws_tools/
     ├── biome/
-
     ├── dotfiles/
-    ├── gemini_cli/
+    ├── fnm/          # ← Migrado de 'node' para 'fnm'
     ├── homebrew/
     ├── kvm/
-    ├── node/
     ├── ohmyzsh/
-    ├── pyenv/
     ├── sdkman/
+    ├── snap/
     ├── ssh/
     ├── starship/
     ├── sudo/
     ├── user/
-    ├── vscode/
     └── zsh/
 ```
+
+### Testes
+
+Execute o script de validação para verificar se todas as ferramentas estão corretamente instaladas:
+
+```bash
+./validate_tools.sh
+```
+
+#### Testes Automatizados com Molecule
+
+Para desenvolvedores que querem testar mudanças nos roles:
+
+```bash
+# 1. Instalar Molecule
+./scripts/install-molecule.sh
+
+# 2. Recarregar shell
+exec zsh
+
+# 3. Testar roles individuais
+cd roles/fnm
+molecule test
+
+cd ../bun
+molecule test
+
+# 4. Ou testar todos
+./scripts/test-all-roles.sh
+```
+
+Consulte [`docs/TESTING.md`](docs/TESTING.md) para guia completo de testes.
 
 ### Referências
 - `scruffaluff/bootware` em Ansible Galaxy
 - `legnoh/dotfiles` em Ansible Galaxy
+
+### Migração e Documentação
+
+- [Guia de Migração NVM → FNM](docs/MIGRATION_NVM_TO_FNM.md) - Instruções detalhadas para usuários que estão migrando do NVM
 
 

@@ -1,0 +1,4 @@
+---
+- name: reload shell for bun
+  debug:
+    msg: "Bun installed. Run 'bun --version' to verify."

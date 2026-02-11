@@ -1,0 +1,31 @@
+# Core tools
+brew "git"
+brew "git-delta"
+brew "zsh"
+brew "starship"
+
+# Node.js and JavaScript runtimes
+brew "fnm"
+brew "bun"
+
+# Development tools
+brew "bat"
+brew "vim"
+brew "eza"
+brew "fzf"
+brew "ripgrep"
+brew "jq"
+brew "yq"
+brew "httpyac"
+brew "tldr"
+brew "wget"
+
+# System utilities
+brew "wl-clipboard"
+brew "xclip"
+brew "watchman"
+brew "htop"
+brew "ncdu"
+
+# AI tools
+brew "gemini-cli"

@@ -1,0 +1,4 @@
+---
+- name: reload shell
+  debug:
+    msg: "FNM configuration updated. Node environment reloaded."

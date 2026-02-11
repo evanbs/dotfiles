@@ -37,9 +37,13 @@
       tags: ['starship', 'prompt']
       when: install_starship | bool
 
-    - role: node
-      tags: ['node', 'packages']
+    - role: fnm
+      tags: ['fnm', 'node', 'packages']
       when: install_node | bool
+
+    - role: bun
+      tags: ['bun', 'javascript', 'packages']
+      when: install_bun | bool
 
     - role: biome
       tags: ['biome', 'packages']

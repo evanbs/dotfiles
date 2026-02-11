@@ -1,0 +1,28 @@
+---
+- name: Install Bun via Homebrew
+  community.general.homebrew:
+    name: bun
+    state: present
+    path: "{{ brew_prefix }}/bin"
+  become_user: "{{ dev_username }}"
+
+- name: Create Bun cache directory
+  file:
+    path: "/home/{{ dev_username }}/.bun/install/cache"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+- name: Verify Bun installation
+  become_user: "{{ dev_username }}"
+  shell: |
+    {{ brew_prefix }}/bin/bun --version
+  args:
+    executable: /bin/bash
+  register: bun_version
+  changed_when: false
+
+- name: Display Bun version
+  debug:
+    msg: "Bun {{ bun_version.stdout }} installed successfully"

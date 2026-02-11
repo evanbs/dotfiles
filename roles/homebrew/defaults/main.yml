@@ -1,0 +1,20 @@
+---
+brew_packages:
+  - bat
+  - vim
+  - eza
+  - httpyac
+  - yq
+  - ripgrep
+  - tldr
+  - jq
+  - wget
+  - wl-clipboard
+  - xclip
+  - watchman
+  - fzf
+  - htop
+  - ncdu
+  - gemini-cli
+  - fnm
+  - bun

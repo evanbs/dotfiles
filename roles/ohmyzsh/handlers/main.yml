@@ -1,0 +1,4 @@
+---
+- name: reload zsh config
+  debug:
+    msg: "Zsh configuration updated. Run 'source ~/.zshrc' or restart terminal."

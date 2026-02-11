@@ -1,8 +1,0 @@
----
-galaxy_info:
-  author: evandro
-  description: Install NVM, Node LTS, yarn, pnpm and biome.
-  min_ansible_version: '2.9'
-dependencies: []
-
-

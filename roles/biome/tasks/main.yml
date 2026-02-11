@@ -3,8 +3,7 @@
   become_user: "{{ dev_username }}"
   shell: |
     set -euo pipefail
-    . "/home/{{ dev_username }}/.nvm/nvm.sh"
-    nvm use default
+    eval "$({{ brew_prefix }}/bin/fnm env)"
     npm install -g @biomejs/biome
   args:
     executable: /bin/bash

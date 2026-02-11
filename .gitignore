@@ -1,0 +1,38 @@
+# Molecule
+.molecule/
+.cache/
+
+# Ansible
+*.retry
+collections/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Docker
+.docker/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary
+tmp/
+temp/

@@ -1,0 +1,65 @@
+---
+- name: Install FNM via Homebrew
+  community.general.homebrew:
+    name: fnm
+    state: present
+    path: "{{ brew_prefix }}/bin"
+  become_user: "{{ dev_username }}"
+
+- name: Create FNM data directory
+  file:
+    path: "/home/{{ dev_username }}/.local/share/fnm"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+- name: Check if Node LTS is installed
+  become_user: "{{ dev_username }}"
+  shell: |
+    eval "$({{ brew_prefix }}/bin/fnm env)"
+    fnm list | grep -q lts
+  args:
+    executable: /bin/bash
+  register: node_lts_check
+  failed_when: false
+  changed_when: false
+
+- name: Install Node LTS via FNM
+  become_user: "{{ dev_username }}"
+  shell: |
+    eval "$({{ brew_prefix }}/bin/fnm env)"
+    fnm install {{ node_version }}
+    fnm default {{ node_version }}
+  args:
+    executable: /bin/bash
+  when: node_lts_check.rc != 0
+  notify: reload shell
+
+- name: Enable corepack for yarn/pnpm
+  become_user: "{{ dev_username }}"
+  shell: |
+    eval "$({{ brew_prefix }}/bin/fnm env)"
+    corepack enable
+  args:
+    executable: /bin/bash
+
+- name: Install yarn and pnpm via corepack
+  become_user: "{{ dev_username }}"
+  shell: |
+    eval "$({{ brew_prefix }}/bin/fnm env)"
+    corepack prepare yarn@{{ yarn_version }} --activate
+    corepack prepare pnpm@{{ pnpm_version }} --activate
+  args:
+    executable: /bin/bash
+
+- name: Ensure PNPM_HOME directory exists
+  file:
+    path: "/home/{{ dev_username }}/.local/share/pnpm"
+    state: directory
+    owner: "{{ dev_username }}"
+    group: "{{ dev_username }}"
+    mode: '0755'
+
+
+

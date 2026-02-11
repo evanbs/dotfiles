@@ -1,0 +1,11 @@
+---
+- name: reload shell
+  debug:
+    msg: "Shell configuration updated. Please run 'exec zsh -l' to apply changes."
+
+- name: update brew
+  become_user: "{{ dev_username }}"
+  community.general.homebrew:
+    update_homebrew: yes
+    path: "{{ brew_prefix }}/bin"
+  listen: "brew update"

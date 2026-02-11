@@ -6,9 +6,8 @@ plugins=(git you-should-use zsh-autosuggestions history-substring-search zsh-syn
 
 source $ZSH/oh-my-zsh.sh
 
-# NVM (Node Version Manager)
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# FNM (Fast Node Manager)
+eval "$({{ brew_prefix }}/bin/fnm env --use-on-cd)"
 
 # Homebrew
 eval "$({{ brew_prefix }}/bin/brew shellenv)"

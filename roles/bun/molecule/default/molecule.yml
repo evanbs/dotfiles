@@ -1,0 +1,18 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ubuntu-bun-test
+    image: ubuntu:22.04
+    pre_build_image: false
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      ubuntu-bun-test:
+        dev_username: testuser
+        brew_prefix: /home/linuxbrew/.linuxbrew
+verifier:
+  name: ansible

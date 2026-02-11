@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check if bun is installed
+      command: bun --version
+      register: bun_version
+      changed_when: false
+
+    - name: Verify bun version output
+      assert:
+        that:
+          - bun_version.rc == 0
+          - bun_version.stdout is version('1.0', '>=')
+        fail_msg: "Bun not properly installed"
+        success_msg: "Bun {{ bun_version.stdout }} is installed"

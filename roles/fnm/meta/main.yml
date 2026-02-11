@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  author: evandro
+  description: Install FNM (Fast Node Manager), Node LTS, yarn, pnpm and configure corepack.
+  min_ansible_version: '2.9'
+dependencies:
+  - role: homebrew
+
+

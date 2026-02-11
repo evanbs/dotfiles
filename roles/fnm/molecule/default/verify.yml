@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check if fnm is installed
+      command: fnm --version
+      register: fnm_version
+      changed_when: false
+
+    - name: Check if node is installed
+      shell: |
+        eval "$(fnm env)"
+        node --version
+      register: node_version
+      changed_when: false
+
+    - name: Verify fnm version output
+      assert:
+        that:
+          - fnm_version.rc == 0
+          - "'fnm' in fnm_version.stdout"
+
+    - name: Verify node version output
+      assert:
+        that:
+          - node_version.rc == 0
+          - "'v' in node_version.stdout"
