@@ -17,7 +17,7 @@
   become_user: "{{ dev_username }}"
   shell: |
     eval "$({{ brew_prefix }}/bin/fnm env)"
-    fnm list | grep -q lts
+    {{ brew_prefix }}/bin/fnm list | grep -q lts
   args:
     executable: /bin/bash
   register: node_lts_check
@@ -28,8 +28,8 @@
   become_user: "{{ dev_username }}"
   shell: |
     eval "$({{ brew_prefix }}/bin/fnm env)"
-    fnm install {{ node_version }}
-    fnm default {{ node_version }}
+    {{ brew_prefix }}/bin/fnm install {{ node_version }}
+    {{ brew_prefix }}/bin/fnm default {{ node_version }}
   args:
     executable: /bin/bash
   when: node_lts_check.rc != 0
@@ -39,7 +39,7 @@
   become_user: "{{ dev_username }}"
   shell: |
     eval "$({{ brew_prefix }}/bin/fnm env)"
-    corepack enable
+    {{ brew_prefix }}/bin/fnm exec --using={{ node_version }} corepack enable
   args:
     executable: /bin/bash
 
@@ -47,8 +47,8 @@
   become_user: "{{ dev_username }}"
   shell: |
     eval "$({{ brew_prefix }}/bin/fnm env)"
-    corepack prepare yarn@{{ yarn_version }} --activate
-    corepack prepare pnpm@{{ pnpm_version }} --activate
+    {{ brew_prefix }}/bin/fnm exec --using={{ node_version }} corepack prepare yarn@{{ yarn_version }} --activate
+    {{ brew_prefix }}/bin/fnm exec --using={{ node_version }} corepack prepare pnpm@{{ pnpm_version }} --activate
   args:
     executable: /bin/bash
 

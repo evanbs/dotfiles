@@ -4,7 +4,7 @@
   shell: |
     set -euo pipefail
     eval "$({{ brew_prefix }}/bin/fnm env)"
-    npm install -g @biomejs/biome
+    {{ brew_prefix }}/bin/fnm exec --using={{ node_version }} npm install -g @biomejs/biome
   args:
     executable: /bin/bash
   tags:

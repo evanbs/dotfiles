@@ -13,11 +13,27 @@ Validar instalação em ambiente WSL completamente limpo.
 brew list <package> >/dev/null 2>&1 || brew install <package> | cat
 ```
 
+### 2. Corrigido PATH do FNM
+**Problema:** Comandos `fnm`, `node`, `npm`, `corepack` não eram encontrados porque dependem de `eval "$(fnm env)"` OU do caminho completo.
+
+**Solução:** Todos os comandos FNM/Node agora usam caminho completo:
+```bash
+# Antes (não funcionava)
+eval "$(fnm env)"
+fnm install lts-latest
+
+# Depois (funciona)
+eval "$({{ brew_prefix }}/bin/fnm env)"
+{{ brew_prefix }}/bin/fnm install lts-latest
+{{ brew_prefix }}/bin/fnm exec --using=lts-latest npm install -g pkg
+```
+
 ### 2. Arquivos modificados:
 ```
 handlers/main.yml                → Handler de update brew
+roles/biome/tasks/main.yml       → Comandos npm com fnm exec
 roles/bun/tasks/main.yml         → Instalação do Bun
-roles/fnm/tasks/main.yml         → Instalação do FNM
+roles/fnm/tasks/main.yml         → Caminhos completos para fnm/node/npm
 roles/homebrew/defaults/main.yml → Removido fnm/bun (roles próprios)
 roles/homebrew/files/Brewfile    → Documentação de referência
 roles/homebrew/tasks/main.yml    → Tasks de instalação base e tools
