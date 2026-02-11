@@ -5,6 +5,9 @@
     state: present
     path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    HOMEBREW_PREFIX: "{{ brew_prefix }}"
 
 - name: Create Bun cache directory
   file:

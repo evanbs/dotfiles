@@ -65,6 +65,9 @@
     state: present
     path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    HOMEBREW_PREFIX: "{{ brew_prefix }}"
 
 - name: Ensure brew is in PATH for subsequent tasks
   set_fact:
@@ -81,6 +84,9 @@
   community.general.homebrew:
     update_homebrew: yes
     path: "{{ brew_prefix }}/bin"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    HOMEBREW_PREFIX: "{{ brew_prefix }}"
 
 - name: Install developer CLI tools via brew
   community.general.homebrew:
@@ -88,6 +94,9 @@
     state: present
     path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
+  environment:
+    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
+    HOMEBREW_PREFIX: "{{ brew_prefix }}"
 
 - name: Copy Brewfile to user home
   copy:
