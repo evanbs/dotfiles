@@ -1,6 +1,12 @@
 dev_username: "{{ lookup('env','SUDO_USER') or lookup('env','USER') }}"
 brew_prefix: "/home/linuxbrew/.linuxbrew"
 
+# --- Tool Versions ---
+fnm_version: "latest"
+starship_version: "latest"
+zsh_version: "latest"
+sdkman_version: "latest"
+
 # Sudo configuration
 # When true, grants passwordless sudo (NOPASSWD) to current user
 sudo_nopasswd: true
@@ -14,9 +20,12 @@ git_user_email: "evandro.barbosa@yahoo.com.br"
 # --- Node.js Configuration (using FNM instead of NVM) ---
 install_node: true
 node_version: "lts-latest"
+yarn_version: "stable"
+pnpm_version: "latest"
 
 # --- Bun Configuration ---
 install_bun: true
+bun_version: "latest"
 
 # --- Role Toggles ---
 # Set to false to disable the installation of a component

@@ -28,8 +28,24 @@ eval "$({{ brew_prefix }}/bin/fnm env)"
 {{ brew_prefix }}/bin/fnm exec --using=lts-latest npm install -g pkg
 ```
 
+### 3. Consolidado variáveis em `group_vars/all.yml`
+**Problema:** Variáveis `yarn_version` e `pnpm_version` estavam em `group_vars/versions.yml` que não é carregado automaticamente pelo Ansible.
+
+**Solução:** Todas as variáveis foram movidas para `group_vars/all.yml`:
+```yaml
+node_version: "lts-latest"
+yarn_version: "stable"
+pnpm_version: "latest"
+bun_version: "latest"
+fnm_version: "latest"
+starship_version: "latest"
+zsh_version: "latest"
+sdkman_version: "latest"
+```
+
 ### 2. Arquivos modificados:
 ```
+group_vars/all.yml               → Consolidadas todas as variáveis de versão
 handlers/main.yml                → Handler de update brew
 roles/biome/tasks/main.yml       → Comandos npm com fnm exec
 roles/bun/tasks/main.yml         → Instalação do Bun
@@ -38,6 +54,11 @@ roles/homebrew/defaults/main.yml → Removido fnm/bun (roles próprios)
 roles/homebrew/files/Brewfile    → Documentação de referência
 roles/homebrew/tasks/main.yml    → Tasks de instalação base e tools
 site.yml                         → Removido pre_task do community.general
+```
+
+**Removido:**
+```
+group_vars/versions.yml          → Variáveis movidas para all.yml
 ```
 
 ### 3. Estratégia de instalação:
