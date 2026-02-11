@@ -1,13 +1,9 @@
 ---
 - name: Install FNM via Homebrew
-  community.general.homebrew:
-    name: fnm
-    state: present
-    path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
-  environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
-    HOMEBREW_PREFIX: "{{ brew_prefix }}"
+  shell: "{{ brew_prefix }}/bin/brew list fnm >/dev/null 2>&1 || {{ brew_prefix }}/bin/brew install fnm | cat"
+  args:
+    executable: /bin/bash
 
 - name: Create FNM data directory
   file:

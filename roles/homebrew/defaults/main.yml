@@ -16,5 +16,3 @@ brew_packages:
   - htop
   - ncdu
   - gemini-cli
-  - fnm
-  - bun

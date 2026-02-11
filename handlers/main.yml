@@ -5,7 +5,7 @@
 
 - name: update brew
   become_user: "{{ dev_username }}"
-  community.general.homebrew:
-    update_homebrew: yes
-    path: "{{ brew_prefix }}/bin"
+  shell: "{{ brew_prefix }}/bin/brew update | cat"
+  args:
+    executable: /bin/bash
   listen: "brew update"

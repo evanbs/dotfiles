@@ -1,13 +1,9 @@
 ---
 - name: Install Bun via Homebrew
-  community.general.homebrew:
-    name: bun
-    state: present
-    path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
-  environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
-    HOMEBREW_PREFIX: "{{ brew_prefix }}"
+  shell: "{{ brew_prefix }}/bin/brew list bun >/dev/null 2>&1 || {{ brew_prefix }}/bin/brew install bun | cat"
+  args:
+    executable: /bin/bash
 
 - name: Create Bun cache directory
   file:

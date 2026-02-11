@@ -1,31 +1,35 @@
-# Core tools
+# Brewfile - Referência de pacotes instalados via Homebrew
+# Este arquivo serve como documentação. Os pacotes são instalados via Ansible tasks.
+# Para mais detalhes, veja roles/homebrew/defaults/main.yml
+
+# Core tools (instalados primeiro)
 brew "git"
 brew "git-delta"
 brew "zsh"
 brew "starship"
 
-# Node.js and JavaScript runtimes
-brew "fnm"
-brew "bun"
-
-# Development tools
-brew "bat"
-brew "vim"
-brew "eza"
-brew "fzf"
-brew "ripgrep"
-brew "jq"
-brew "yq"
-brew "httpyac"
-brew "tldr"
-brew "wget"
+# Development tools (instalados via brew_packages)
+brew "bat"        # cat com syntax highlighting
+brew "vim"        # Editor de texto
+brew "eza"        # ls moderno
+brew "fzf"        # Fuzzy finder
+brew "ripgrep"    # grep mais rápido
+brew "jq"         # JSON processor
+brew "yq"         # YAML processor
+brew "httpyac"    # HTTP client
+brew "tldr"       # Simplified man pages
+brew "wget"       # Download de arquivos
 
 # System utilities
-brew "wl-clipboard"
-brew "xclip"
-brew "watchman"
-brew "htop"
-brew "ncdu"
+brew "wl-clipboard"  # Clipboard para Wayland
+brew "xclip"         # Clipboard para X11
+brew "watchman"      # File watcher
+brew "htop"          # Process monitor
+brew "ncdu"          # Disk usage analyzer
 
 # AI tools
-brew "gemini-cli"
+brew "gemini-cli"  # Google Gemini CLI
+
+# JavaScript runtimes (instalados por roles específicos)
+# - fnm (Fast Node Manager) → roles/fnm
+# - bun (All-in-one JS runtime) → roles/bun

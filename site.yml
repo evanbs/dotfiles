@@ -4,15 +4,6 @@
     dev_username: "{{ dev_username | default(lookup('env','SUDO_USER') or lookup('env','USER')) }}"
     brew_prefix: "/home/linuxbrew/.linuxbrew"
 
-  pre_tasks:
-    - name: Ensure community.general collection is installed
-      ansible.builtin.command: ansible-galaxy collection install community.general
-      run_once: true
-      delegate_to: localhost
-      changed_when: false
-      tags:
-        - always
-
   roles:
     - role: user
       tags: ['user', 'base']

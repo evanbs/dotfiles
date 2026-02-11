@@ -56,18 +56,13 @@
   become_user: "{{ dev_username }}"
 
 - name: Install base packages via brew
-  community.general.homebrew:
-    name:
-      - git
-      - git-delta
-      - zsh
-      - starship
-    state: present
-    path: "{{ brew_prefix }}/bin"
   become_user: "{{ dev_username }}"
-  environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
-    HOMEBREW_PREFIX: "{{ brew_prefix }}"
+  shell: |
+    for pkg in git git-delta zsh starship; do
+      {{ brew_prefix }}/bin/brew list $pkg >/dev/null 2>&1 || {{ brew_prefix }}/bin/brew install $pkg | cat
+    done
+  args:
+    executable: /bin/bash
 
 - name: Ensure brew is in PATH for subsequent tasks
   set_fact:
@@ -81,12 +76,11 @@
 
 - name: Update Homebrew formulas
   become_user: "{{ dev_username }}"
-  community.general.homebrew:
-    update_homebrew: yes
-    path: "{{ brew_prefix }}/bin"
-  environment:
-    PATH: "{{ brew_prefix }}/bin:{{ ansible_env.PATH }}"
-    HOMEBREW_PREFIX: "{{ brew_prefix }}"
+  shell: "{{ brew_prefix }}/bin/brew update | cat"
+  args:
+    executable: /bin/bash
+  register: brew_update_result
+  changed_when: "'Already up-to-date' not in brew_update_result.stdout"
 
 - name: Install developer CLI tools via brew
   become_user: "{{ dev_username }}"
@@ -95,20 +89,5 @@
     executable: /bin/bash
   loop: "{{ brew_packages }}"
 
-- name: Copy Brewfile to user home
-  copy:
-    src: "{{ role_path }}/files/Brewfile"
-    dest: "/home/{{ dev_username }}/.Brewfile"
-    owner: "{{ dev_username }}"
-    mode: '0644'
-  become_user: "{{ dev_username }}"
-
-- name: Install packages from Brewfile
-  become_user: "{{ dev_username }}"
-  shell: "{{ brew_prefix }}/bin/brew bundle --file=/home/{{ dev_username }}/.Brewfile"
-  args:
-    executable: /bin/bash
-  register: brew_bundle_result
-  changed_when: "'Installing' in brew_bundle_result.stdout"
 
 
