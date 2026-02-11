@@ -43,15 +43,28 @@ zsh_version: "latest"
 sdkman_version: "latest"
 ```
 
+### 4. Corrigido instalação do Bun
+**Problema:** O comando `brew install bun` falhava silenciosamente porque o pacote não existe no Homebrew core.
+
+**Solução:** Usar o tap oficial do Bun:
+```bash
+brew install oven-sh/bun/bun
+```
+
+**Melhorias:**
+- Verificação explícita se já está instalado
+- Captura e exibição de erros de instalação
+- Não esconde falhas com `| cat`
+
 ### 2. Arquivos modificados:
 ```
 group_vars/all.yml               → Consolidadas todas as variáveis de versão
 handlers/main.yml                → Handler de update brew
 roles/biome/tasks/main.yml       → Comandos npm com fnm exec
-roles/bun/tasks/main.yml         → Instalação do Bun
+roles/bun/tasks/main.yml         → Instalação via tap oven-sh/bun/bun
 roles/fnm/tasks/main.yml         → Caminhos completos para fnm/node/npm
 roles/homebrew/defaults/main.yml → Removido fnm/bun (roles próprios)
-roles/homebrew/files/Brewfile    → Documentação de referência
+roles/homebrew/files/Brewfile    → Documentação de referência (nota sobre tap do Bun)
 roles/homebrew/tasks/main.yml    → Tasks de instalação base e tools
 site.yml                         → Removido pre_task do community.general
 ```

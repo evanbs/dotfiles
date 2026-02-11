@@ -32,4 +32,4 @@ brew "gemini-cli"  # Google Gemini CLI
 
 # JavaScript runtimes (instalados por roles específicos)
 # - fnm (Fast Node Manager) → roles/fnm
-# - bun (All-in-one JS runtime) → roles/bun
+# - bun (All-in-one JS runtime) → roles/bun via tap oven-sh/bun/bun
